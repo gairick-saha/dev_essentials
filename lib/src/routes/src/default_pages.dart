@@ -1,0 +1,41 @@
+part of '../routes.dart';
+
+class DevEssentialPages {
+  static DevEssentialPage defaultUnknownRoute = DevEssentialPage(
+    name: '/404NotFound',
+    builder: (context) => const Scaffold(
+      body: Center(
+        child: Text("Page not found."),
+      ),
+    ),
+  );
+
+  static List<DevEssentialPage> getPages(
+    List<DevEssentialPage>? userDefinedPages, {
+    SplashConfig? splashConfig,
+  }) {
+    List<DevEssentialPage> defaultPages = [
+      if (splashConfig != null)
+        DevEssentialPage(
+          name: _DevEssentialPaths.root,
+          builder: (context) => BlocProvider<SplashCubit>(
+            create: (context) {
+              SplashCubit cubit = SplashCubit(splashConfig: splashConfig);
+              cubit.initSplash();
+              if (splashConfig.onSplashInitCallback != null) {
+                splashConfig.onSplashInitCallback!(cubit.loadSplash);
+              } else {
+                cubit.loadSplash();
+              }
+              return cubit;
+            },
+            child: const SplashView(),
+          ),
+        ),
+    ];
+    if (userDefinedPages != null) {
+      defaultPages.addAll(userDefinedPages);
+    }
+    return defaultPages;
+  }
+}
