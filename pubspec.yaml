@@ -1,10 +1,10 @@
 name: dev_essentials
 description: A new Flutter package project.
 version: 0.0.1
-homepage: https://gairicksaha.com/
+homepage: https://github.com/gairick-saha/dev_essentials.git
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
+  sdk: ">=3.0.1 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -37,7 +37,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  # To add assets to your plugin package, add an assets section, like this:
+
+  # To add assets to your package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
@@ -48,7 +49,7 @@ flutter:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
-  # To add custom fonts to your plugin package, add a fonts section here,
+  # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
