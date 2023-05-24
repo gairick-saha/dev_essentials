@@ -187,10 +187,10 @@ void main() {
 
 ### Send data to named Routes
 
-Just send what you want for arguments. Get accepts anything here, whether it is a String, a Map, a List, or even a class instance.
+Just send what you want for arguments.It accepts anything here, whether it is a String, a Map, a List, or even a class instance.
 
 ```dart
-Get.toNamed("/NextScreen", arguments: 'Get is the best');
+Dev.toNamed("/NextScreen", arguments: 'DevEssential is the best');
 ```
 
 
