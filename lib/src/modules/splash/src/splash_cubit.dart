@@ -1,6 +1,6 @@
 part of '../splash.dart';
 
-class SplashCubit extends DevEssentialCubit<SplashState> {
+class SplashCubit extends Cubit<SplashState> {
   SplashCubit({
     required SplashConfig? splashConfig,
   }) : super(SplashState(

@@ -1,7 +1,5 @@
 part of '../utils.dart';
 
-typedef DevEssentialCubit<T> = Cubit<T>;
-
 typedef SplashUIBuilder = Widget Function(
   Widget? logo,
   Color? backgroundColor,

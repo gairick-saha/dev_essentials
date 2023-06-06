@@ -10,3 +10,4 @@ export 'src/apps/apps.dart';
 export 'src/configs/configs.dart';
 export 'src/clippers/clippers.dart';
 export 'src/transitions/transitions.dart';
+export 'src/utils/utils.dart';
