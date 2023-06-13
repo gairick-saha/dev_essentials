@@ -70,6 +70,23 @@ extension NavigationExtension on DevEssential {
     return Uri.tryParse(name)?.toString() ?? name;
   }
 
+  NavigatorState? get navigator => NavigationExtension(Dev).key.currentState;
+
+  void back<T>({
+    T? result,
+    bool closeOverlays = false,
+    bool canPop = true,
+    int? id,
+  }) {
+    if (canPop) {
+      if (_global(id).currentState?.canPop() == true) {
+        _global(id).currentState?.pop<T>(result);
+      }
+    } else {
+      _global(id).currentState?.pop<T>(result);
+    }
+  }
+
   Future<T?> to<T>(
     dynamic page, {
     int? id,
@@ -221,4 +238,17 @@ extension NavigationExtension on DevEssential {
           arguments: arguments,
         );
   }
+
+  Route<DevEssentialRoute> nestedRoutes({
+    required RouteSettings settings,
+    required List<DevEssentialPage> pages,
+    DevEssentialPage? unknownRoute,
+  }) =>
+      PagePredict(
+        settings: settings,
+        unknownRoute: unknownRoute ?? DevEssentialPages.defaultUnknownRoute,
+      ).fromPages(pages);
+
+  DevEssentialNavigationObserver get navigatorObserver =>
+      DevEssentialNavigationObserver(routing: routing);
 }

@@ -13,4 +13,11 @@ class DevEssentialRoutingTree {
     final Uri uri = Uri.parse(name);
     return routes.firstWhereOrNull((element) => element.name == uri.path);
   }
+
+  DevEssentialPage? matchRouteFromListOfPages(
+      List<DevEssentialPage> pages, String name,
+      {Object? arguments}) {
+    final Uri uri = Uri.parse(name);
+    return pages.firstWhereOrNull((element) => element.name == uri.path);
+  }
 }

@@ -1,10 +1,11 @@
 part of '../navigation.dart';
 
-class DevEssentialPage<T> extends Page<T> {
+class DevEssentialPage extends Page {
   const DevEssentialPage({
     required String name,
     Object? arguments,
     required this.builder,
+    this.childrens,
   }) : super(
           name: name,
           arguments: arguments,
@@ -12,9 +13,10 @@ class DevEssentialPage<T> extends Page<T> {
 
   final WidgetBuilder builder;
 
+  final List<DevEssentialPage>? childrens;
+
   @override
-  DevEssentialRoute<T> createRoute(BuildContext context) =>
-      DevEssentialRoute<T>(
+  DevEssentialRoute createRoute(BuildContext context) => DevEssentialRoute(
         settings: this,
         pageBuilder: builder,
       );

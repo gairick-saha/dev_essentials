@@ -78,7 +78,7 @@ class DevEssentialMaterialApp extends HookWidget {
             themeMode: rootHookState.themeMode,
             navigatorKey: rootHookState.routing.rootNavigatorKey,
             navigatorObservers: [
-              DevEssentialNavigationObserver(routing: rootHookState.routing),
+              Dev.navigatorObserver,
               BotToastNavigatorObserver(),
               ...navigatorObservers,
             ],
