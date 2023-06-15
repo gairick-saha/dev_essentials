@@ -21,6 +21,7 @@ class DevEssentialMaterialApp extends HookWidget {
     this.defaultDialogTransitionCurve,
     this.defaultDialogTransitionDuration,
     this.customTransition,
+    this.showDevicePreview = false,
   })  : assert(
           pages == null || home == null,
           'Either the home property must be specified, '
@@ -46,13 +47,14 @@ class DevEssentialMaterialApp extends HookWidget {
   final Curve? defaultDialogTransitionCurve;
   final Duration? defaultDialogTransitionDuration;
   final DevEssentialCustomTransition? customTransition;
+  final bool showDevicePreview;
 
   static InheritedDevEssentialRootApp of(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<InheritedDevEssentialRootApp>()!;
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedDevEssentialRootApp(
+    final Widget materialApp = _InheritedDevEssentialRootApp(
       devEssentialHook: useDevEssentialHook(
         theme: theme ?? ThemeData.fallback(),
         darkTheme: darkTheme ?? ThemeData.fallback(),
@@ -97,6 +99,15 @@ class DevEssentialMaterialApp extends HookWidget {
           );
         },
       ),
+    );
+
+    if (!showDevicePreview) {
+      return materialApp;
+    }
+
+    return DevicePreview(
+      enabled: showDevicePreview,
+      builder: (context) => materialApp,
     );
   }
 

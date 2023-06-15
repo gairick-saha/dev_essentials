@@ -37,11 +37,15 @@ extension FormateDateTimeExtension on DateTime {
     return DateFormat('d MMM').format(this);
   }
 
-  String tokkmma() {
+  String time12HourFormat() {
     return DateFormat('hh:mm a').format(this);
   }
 
-  String timeAndDate({String? pattern}) {
+  String time24HourFormat() {
+    return DateFormat('HH:mm').format(this);
+  }
+
+  String custom(String? pattern) {
     return DateFormat(pattern ?? 'hh:mm a - dd MMM yyyy').format(this);
   }
 

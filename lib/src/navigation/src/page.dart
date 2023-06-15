@@ -20,4 +20,17 @@ class DevEssentialPage extends Page {
         settings: this,
         pageBuilder: builder,
       );
+
+  DevEssentialPage copyWith({
+    String? name,
+    Object? arguments,
+    WidgetBuilder? builder,
+    List<DevEssentialPage>? childrens,
+  }) =>
+      DevEssentialPage(
+        name: (name ?? this.name)!,
+        arguments: arguments ?? this.arguments,
+        builder: builder ?? this.builder,
+        childrens: childrens ?? this.childrens,
+      );
 }

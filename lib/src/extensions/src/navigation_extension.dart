@@ -251,4 +251,8 @@ extension NavigationExtension on DevEssential {
 
   DevEssentialNavigationObserver get navigatorObserver =>
       DevEssentialNavigationObserver(routing: routing);
+
+  Future<bool> handleNestedNavigationBackButton() async {
+    return false;
+  }
 }

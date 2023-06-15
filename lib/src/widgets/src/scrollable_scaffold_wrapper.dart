@@ -1,33 +1,6 @@
 part of '../widgets.dart';
 
 class ScrollableScaffoldWrapper extends StatelessWidget {
-  final GlobalKey<ScaffoldState>? scaffoldKey;
-  final PreferredSizeWidget? appBar;
-  final List<Widget>? slivers;
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
-  final Future<void> Function()? onRefresh;
-  final ScrollController? scrollController;
-  final Color? color;
-  final Widget? bottomBar;
-  final bool extendBodyBehindAppBar;
-  final Future<bool> Function()? onWillPop;
-  final ScrollPhysics? physics;
-  final bool isLoading;
-  final Color? bottomBarcolor;
-  final double? elevation;
-  final NotchedShape? shape;
-  final Clip? clipBehavior;
-  final double notchMargin;
-  final bool shrinkWrap;
-  final ValueChanged<int>? onTabChanged;
-  final bool reverse;
-  final Widget? child;
-  final Widget? drawer;
-  final Widget? endDrawer;
-  final ValueChanged<bool>? onDrawerChanged;
-  final ValueChanged<bool>? onEndDrawerChanged;
-
   const ScrollableScaffoldWrapper({
     Key? key,
     this.scaffoldKey,
@@ -57,6 +30,33 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
     this.onDrawerChanged,
     this.onEndDrawerChanged,
   }) : super(key: key);
+
+  final GlobalKey<ScaffoldState>? scaffoldKey;
+  final PreferredSizeWidget? appBar;
+  final List<Widget>? slivers;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final Widget? floatingActionButton;
+  final Future<void> Function()? onRefresh;
+  final ScrollController? scrollController;
+  final Color? color;
+  final Widget? bottomBar;
+  final bool extendBodyBehindAppBar;
+  final Future<bool> Function()? onWillPop;
+  final ScrollPhysics? physics;
+  final bool isLoading;
+  final Color? bottomBarcolor;
+  final double? elevation;
+  final NotchedShape? shape;
+  final Clip? clipBehavior;
+  final double notchMargin;
+  final bool shrinkWrap;
+  final ValueChanged<int>? onTabChanged;
+  final bool reverse;
+  final Widget? child;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final ValueChanged<bool>? onDrawerChanged;
+  final ValueChanged<bool>? onEndDrawerChanged;
 
   @override
   Widget build(BuildContext context) {

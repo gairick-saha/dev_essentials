@@ -18,6 +18,10 @@ extension MediaQueryAndThemeExtension on DevEssential {
 
   double get bottomBarHeight => mediaQuery.padding.bottom;
 
+  EdgeInsets get viewInsets => mediaQuery.viewInsets;
+
+  EdgeInsets get viewPadding => mediaQuery.viewPadding;
+
   double get textScaleFactor => mediaQuery.textScaleFactor;
 
   FocusNode? get focusScope => FocusManager.instance.primaryFocus;
@@ -50,6 +54,10 @@ extension MediaQueryAndThemeExtension on DevEssential {
   double get physicalDeviceStatusBarHeight => view.padding.top;
 
   double get physicalDeviceBottomBarHeight => view.padding.bottom;
+
+  ViewPadding get physicalDeviceViewInsets => view.viewInsets;
+
+  ViewPadding get physicalDeviceViewPadding => view.viewPadding;
 
   double get physicalDeviceTextScaleFactor =>
       view.platformDispatcher.textScaleFactor;

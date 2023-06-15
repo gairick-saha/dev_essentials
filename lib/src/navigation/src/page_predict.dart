@@ -14,7 +14,16 @@ class PagePredict {
   });
 
   DevEssentialRoute<T> fromPages<T>(List<DevEssentialPage> pages) {
-    _checkRoute(pages: pages);
+    _checkRoute(
+        pages: pages
+            .map(
+              (e) => e.copyWith(
+                name: e.name!.startsWith('/')
+                    ? e.name![0].replaceAll('/', '') + e.name!.substring(1)
+                    : e.name,
+              ),
+            )
+            .toList());
     final DevEssentialPage page = (isUnknown ? unknownRoute : route)!;
     return DevEssentialRoute<T>(
       settings: isUnknown
@@ -49,9 +58,14 @@ class PagePredict {
     final DevEssentialPage? matchedRoute;
 
     if (pages != null) {
+      String name = settings!.name!.startsWith('/')
+          ? settings!.name![0].replaceAll('/', '') +
+              settings!.name!.substring(1)
+          : settings!.name!;
+      Dev.print(name);
       matchedRoute = Dev.routing.routingTree.matchRouteFromListOfPages(
         pages,
-        settings!.name!,
+        name,
         arguments: settings!.arguments,
       );
     } else {

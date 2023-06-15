@@ -36,17 +36,17 @@ class _LoggingInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     switch (err.type) {
-      case DioErrorType.cancel:
+      case DioExceptionType.cancel:
         break;
-      case DioErrorType.connectionTimeout:
+      case DioExceptionType.connectionTimeout:
         break;
-      case DioErrorType.unknown:
+      case DioExceptionType.unknown:
         break;
-      case DioErrorType.receiveTimeout:
+      case DioExceptionType.receiveTimeout:
         break;
-      case DioErrorType.badResponse:
+      case DioExceptionType.badResponse:
         if (kDebugMode) {
           Dev.print(
               'From OnError interceptor method: ${err.requestOptions.method}');
@@ -55,11 +55,11 @@ class _LoggingInterceptor extends Interceptor {
           Dev.print('From OnError interceptor: ${err.response}');
         }
         return handler.resolve(err.response!);
-      case DioErrorType.badCertificate:
+      case DioExceptionType.badCertificate:
         break;
-      case DioErrorType.connectionError:
+      case DioExceptionType.connectionError:
         break;
-      case DioErrorType.sendTimeout:
+      case DioExceptionType.sendTimeout:
         break;
     }
     return handler.next(err);

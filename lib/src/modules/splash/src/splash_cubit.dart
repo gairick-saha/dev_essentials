@@ -31,7 +31,7 @@ class SplashCubit extends Cubit<SplashState> {
       SplashState newStateAfterSplashCompleted =
           state.copyWith(isSplashCompleted: true);
       Dev.print("Splash Completed...");
-      Dev.offNamed(routeWhenSplashComplete);
+      Dev.offAllNamed(routeWhenSplashComplete);
       emit(newStateAfterSplashCompleted);
     });
   }

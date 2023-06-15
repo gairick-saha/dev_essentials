@@ -5,9 +5,9 @@ extension DevEssentialExtension on DevEssential {
       .dependOnInheritedWidgetOfExactType<InheritedDevEssentialRootApp>()!
       .devEssentialHook;
 
-  void print(dynamic message) {
+  void print(dynamic message, {String? name}) {
     if (kDebugMode) {
-      log((message).toString(), name: 'DevEssential');
+      log((message).toString(), name: name ?? 'DevEssential');
     }
   }
 
