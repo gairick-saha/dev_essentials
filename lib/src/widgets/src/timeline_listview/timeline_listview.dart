@@ -109,94 +109,124 @@ class TimelineListView extends StatelessWidget {
   }
 
   Widget _buildTimelineItem(BuildContext context, int index) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final TimelineListItem model = itemBuilder(context, index);
-        final bool isFirst = reverse ? index == (itemCount - 1) : index == 0;
-        final bool isLast = reverse ? index == 0 : index == (itemCount - 1);
-        final double timelinewidth =
-            (timelineWidth ?? iconSize) + (iconSize * 2);
+    return MediaQuery.removeViewPadding(
+      context: context,
+      removeBottom: true,
+      removeTop: true,
+      removeLeft: true,
+      removeRight: true,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final TimelineListItem model = itemBuilder(context, index);
+          final bool isFirst = reverse ? index == (itemCount - 1) : index == 0;
+          final bool isLast = reverse ? index == 0 : index == (itemCount - 1);
+          double timelineContainerwidth = timelineWidth ?? iconSize;
 
-        final TextStyle? lableTextStyle =
-            labelStyle ?? Dev.theme.textTheme.labelMedium;
+          TextPainter? textPainter;
 
-        final TextSpan textSpan = TextSpan(
-          text: model.label,
-          style: labelStyle,
-        );
+          if (model.icon != null || model.imageUrl != null) {
+            timelineContainerwidth += iconSize / 2;
+          }
 
-        final TextPainter textPainter = TextPainter(
-          text: textSpan,
-          textDirection: TextDirection.ltr,
-        );
+          if (model.label != null) {
+            final TextSpan textSpan = TextSpan(
+              text: model.label,
+              style: labelStyle ?? Dev.theme.textTheme.labelMedium,
+            );
 
-        return SizedBox(
-          height: model.height,
-          width: model.width,
-          child: Stack(
-            fit: StackFit.expand,
-            alignment: Alignment.centerLeft,
-            children: [
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: timelinewidth,
-                child: AnimatedContainer(
+            textPainter = TextPainter(
+              text: textSpan,
+              textDirection: TextDirection.ltr,
+            );
+
+            textPainter.layout(
+              minWidth: 0,
+              maxWidth: (timelineWidth ?? iconSize) + (iconSize * 2),
+            );
+
+            timelineContainerwidth -= iconSize / 2;
+            timelineContainerwidth +=
+                (timelineWidth ?? iconSize) + textPainter.size.width;
+
+            if (model.icon == null && model.imageUrl == null) {
+              timelineContainerwidth =
+                  (timelineWidth ?? iconSize) + textPainter.size.width;
+            }
+          }
+
+          return SizedBox(
+            height: model.height,
+            width: model.width,
+            child: Stack(
+              fit: StackFit.expand,
+              alignment: Alignment.centerLeft,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              children: [
+                AnimatedPositioned(
                   duration: kThemeAnimationDuration,
-                  decoration: _TimelineDecoration(
-                    iconSize: iconSize,
-                    isFirst: isFirst,
-                    isLast: isLast,
-                    lineColor: lineColor ?? Dev.theme.colorScheme.primary,
-                    lineWidth: lineWidth,
-                    timelinewidth: timelinewidth,
-                    hasIcon: model.icon != null,
-                    labelTextPainter: textPainter,
-                    icon: Icon(
-                      model.icon as IconData,
-                      color: Colors.white,
-                      size: iconSize,
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: timelineContainerwidth,
+                  child: AnimatedContainer(
+                    duration: kThemeAnimationDuration,
+                    margin: EdgeInsets.zero,
+                    padding: EdgeInsets.zero,
+                    decoration: _TimelineDecoration(
+                      iconSize: iconSize,
+                      isFirst: isFirst,
+                      isLast: isLast,
+                      lineColor: lineColor ?? Dev.theme.colorScheme.primary,
+                      lineWidth: lineWidth,
+                      timelinewidth: timelineContainerwidth,
+                      hasIcon: model.icon != null || model.imageUrl != null,
+                      labelTextPainter: textPainter,
                     ),
+                    width: timelineContainerwidth,
+                    alignment: Alignment.centerLeft,
+                    child: model.imageUrl != null
+                        ? SizedBox.square(
+                            dimension: iconSize,
+                            child: Image.network(
+                              model.imageUrl!,
+                              filterQuality: FilterQuality.high,
+                              loadingBuilder: (context, child,
+                                      loadingProgress) =>
+                                  loadingProgress == null
+                                      ? child
+                                      : LoadingIndictor(
+                                          color:
+                                              Dev.theme.colorScheme.secondary,
+                                          materialLoadingValue: (loadingProgress
+                                                      .expectedTotalBytes ??
+                                                  0) /
+                                              loadingProgress
+                                                  .cumulativeBytesLoaded,
+                                        ),
+                            ),
+                          )
+                        : model.icon != null
+                            ? Icon(
+                                model.icon as IconData,
+                                color: Colors.white,
+                                size: iconSize,
+                              )
+                            : const SizedBox.shrink(),
                   ),
-                  width: timelinewidth,
-                  alignment: Alignment.centerLeft,
-                  // child: model.imageUrl != null
-                  //     ? SizedBox.square(
-                  //         dimension: iconSize,
-                  //         child: Image.network(
-                  //           model.imageUrl!,
-                  //           filterQuality: FilterQuality.high,
-                  //           loadingBuilder: (context, child, loadingProgress) =>
-                  //               loadingProgress == null
-                  //                   ? child
-                  //                   : LoadingIndictor(
-                  //                       color: Dev.theme.colorScheme.secondary,
-                  //                       materialLoadingValue: (loadingProgress
-                  //                                   .expectedTotalBytes ??
-                  //                               0) /
-                  //                           loadingProgress
-                  //                               .cumulativeBytesLoaded,
-                  //                     ),
-                  //         ),
-                  //       )
-                  //     : model.icon != null
-                  //         ? Icon(
-                  //             model.icon as IconData,
-                  //             color: Colors.white,
-                  //             size: iconSize,
-                  //           )
-                  //         : const SizedBox.shrink(),
                 ),
-              ),
-              Positioned.fill(
-                left: timelinewidth,
-                child: model.child(context, isFirst, isLast),
-              ),
-            ],
-          ),
-        );
-      },
+                AnimatedPositioned(
+                  duration: kThemeAnimationDuration,
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  left: timelineContainerwidth,
+                  child: model.child(context, isFirst, isLast),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -11,7 +11,6 @@ abstract class _TimelinePainter extends BoxPainter {
   final double timelinewidth;
   final bool hasIcon;
   final TextPainter? labelTextPainter;
-  final Widget? icon;
 
   _TimelinePainter(
     super.onChanged, {
@@ -23,7 +22,6 @@ abstract class _TimelinePainter extends BoxPainter {
     required this.isLast,
     required this.hasIcon,
     required this.labelTextPainter,
-    required this.icon,
     iconBackground,
   })  : linePaint = Paint()
           ..color = lineColor
@@ -45,7 +43,6 @@ class _TimelineDecoration extends Decoration {
     required this.timelinewidth,
     required this.hasIcon,
     required this.labelTextPainter,
-    required this.icon,
   });
 
   final double iconSize;
@@ -56,7 +53,6 @@ class _TimelineDecoration extends Decoration {
   final double timelinewidth;
   final bool hasIcon;
   final TextPainter? labelTextPainter;
-  final Widget? icon;
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
@@ -70,7 +66,6 @@ class _TimelineDecoration extends Decoration {
       isLast: isLast,
       hasIcon: hasIcon,
       labelTextPainter: labelTextPainter,
-      icon: icon,
     );
   }
 }
@@ -86,63 +81,100 @@ class _LeftTimelinePainter extends _TimelinePainter {
     required super.isLast,
     required super.hasIcon,
     required super.labelTextPainter,
-    required super.icon,
   });
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
     assert(configuration.size != null);
-    // double iconBackgroundRadius = iconSize / 2;
-    // if (hasIcon) {
-    //   iconBackgroundRadius += iconSize / 2;
-    // }
-    // double iconMargin = iconBackgroundRadius / 2;
-    // Size size = configuration.size!;
-    // final Offset leftOffset = Offset(offset.dx + iconMargin, offset.dy);
-    // final Offset centerOffset = size.centerLeft(leftOffset);
-    // final Offset centerRight = size.centerRight(leftOffset);
-    // final Offset centerTop = size.topLeft(leftOffset);
-    // final Offset centerBottom = size.bottomLeft(leftOffset);
+    double iconBackgroundRadius = (iconSize / 2);
+    double iconMargin = iconBackgroundRadius;
 
-    // if (!isFirst) {
-    //   canvas.drawLine(centerOffset, centerTop, linePaint);
-    // }
-
-    // if (!isLast) {
-    //   canvas.drawLine(centerOffset, centerBottom, linePaint);
-    // }
-
-    // canvas.drawLine(centerOffset, centerRight, linePaint);
-    // canvas.drawCircle(centerOffset, iconBackgroundRadius, circlePaint);
-
-    double iconBackgroundRadius = iconSize / 2;
-    if (hasIcon) {
-      iconBackgroundRadius += iconSize / 2;
+    if (!hasIcon) {
+      iconBackgroundRadius = iconBackgroundRadius / 2;
+      iconMargin = iconBackgroundRadius;
+    } else {
+      iconBackgroundRadius += 2.0;
     }
+
     final Size size = configuration.size!;
-    final Rect rect = offset & configuration.size!;
+    final Offset leftOffset = Offset(offset.dx + iconMargin, offset.dy);
+    final Offset centerLeftOffset = size.centerLeft(leftOffset);
+    final Offset centerRightOffset = size.centerRight(leftOffset);
+    final Offset centerTopOffset =
+        size.centerLeft(Offset(leftOffset.dx, leftOffset.dy - iconMargin));
+    final Offset centerBottomOffset =
+        size.centerLeft(Offset(leftOffset.dx, leftOffset.dy + iconMargin));
+    final Offset leftTopOffset = size.topLeft(leftOffset);
+    final Offset leftBottomOffset =
+        size.bottomLeft(Offset(leftOffset.dx, leftOffset.dy * 2));
 
-    final Offset leftOffset = Offset(offset.dx, offset.dy);
-    final Offset centerOffset = size.centerLeft(leftOffset);
-    final Offset centerRight = size.centerRight(leftOffset);
+    if (!isFirst) {
+      canvas.drawLine(leftTopOffset, centerTopOffset, linePaint);
+    }
 
-    canvas.drawCircle(centerOffset, iconBackgroundRadius, circlePaint);
+    if (!isLast) {
+      canvas.drawLine(centerBottomOffset, leftBottomOffset, linePaint);
+    }
+
+    canvas.drawLine(centerLeftOffset, centerRightOffset, linePaint);
+    canvas.drawCircle(centerLeftOffset, iconBackgroundRadius, circlePaint);
 
     if (labelTextPainter != null) {
-      labelTextPainter!.layout(
-        minWidth: 0,
-        maxWidth: double.infinity,
-      );
-
-      labelTextPainter!.paint(
-        canvas,
-        Offset(centerOffset.dx + (iconBackgroundRadius + 6.0), 0.0),
-      );
+      final Offset textOffset = Offset(
+          centerTopOffset.dx + (iconMargin * 2), centerTopOffset.dy / 2.0);
+      labelTextPainter!.paint(canvas, textOffset);
     }
-
-    // final xCenter = (size.width - textPainter.width) / 2;
-    // final yCenter = (size.height - textPainter.height) / 2;
-    // final offset = Offset(xCenter, yCenter);
-    // textPainter.paint(canvas, offset);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// final Offset leftOffset = Offset(offset.dx + 5.0, offset.dy);
+  // final Offset top = size.topLeft(Offset(leftOffset.dx, 0.0));
+  // final Offset centerOffset = size.center(leftOffset);
+  // final Offset centerTopOffset =
+  //     size.centerLeft(Offset(leftOffset.dx, leftOffset.dy - 5.0));
+  // final Offset bottomLeftOffset = size.bottomLeft(leftOffset);
+  // final Offset leftTopOffset = size.topLeft(leftOffset);
+  // final Offset centerOffset = size.center(leftOffset);
+  // final Offset centerTopOffset =
+  //     size.centerLeft(Offset(leftOffset.dx, leftOffset.dy - 5.0));
+  // final Offset centerLeftOffset = size.centerLeft(leftOffset);
+  // final Offset centerRightOffset = size.centerRight(leftOffset);
+  // final Offset leftBottomOffset = size.bottomLeft(leftOffset);
+
+  // Dev.print(centerOffset.dx / 2);
+
+  // if (labelTextPainter != null) {
+  //   labelTextPainter!.paint(
+  //     canvas,
+  //     Offset(
+  //       centerOffset.dx / 2,
+  //       (centerOffset.dy - (labelTextPainter!.size.height / 2) - 10),
+  //     ),
+  //   );
+  // }
+
+  // if (!isFirst) {
+  //   canvas.drawLine(leftTopOffset, leftBottomOffset, linePaint);
+  // }
+
+  // canvas.drawLine(centerLeftOffset,
+  //     Offset(centerRightOffset.dx, centerRightOffset.dy), linePaint);
+  // canvas.drawCircle(centerLeftOffset, iconBackgroundRadius / 2, circlePaint);
