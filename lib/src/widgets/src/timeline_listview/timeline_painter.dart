@@ -1,17 +1,6 @@
 part of '../../widgets.dart';
 
 abstract class _TimelinePainter extends BoxPainter {
-  final Paint linePaint;
-  final Paint circlePaint;
-  final double iconSize;
-  final bool isFirst;
-  final bool isLast;
-  final Color lineColor;
-  final double lineWidth;
-  final double timelinewidth;
-  final bool hasIcon;
-  final TextPainter? labelTextPainter;
-
   _TimelinePainter(
     super.onChanged, {
     required this.iconSize,
@@ -22,6 +11,8 @@ abstract class _TimelinePainter extends BoxPainter {
     required this.isLast,
     required this.hasIcon,
     required this.labelTextPainter,
+    required this.hasLegend,
+    required this.spaceBetweenLegendAndTimeLine,
     iconBackground,
   })  : linePaint = Paint()
           ..color = lineColor
@@ -31,6 +22,19 @@ abstract class _TimelinePainter extends BoxPainter {
         circlePaint = Paint()
           ..color = iconBackground ?? Dev.theme.colorScheme.primary
           ..style = PaintingStyle.fill;
+
+  final Paint linePaint;
+  final Paint circlePaint;
+  final double iconSize;
+  final bool isFirst;
+  final bool isLast;
+  final Color lineColor;
+  final double lineWidth;
+  final double timelinewidth;
+  final bool hasIcon;
+  final TextPainter? labelTextPainter;
+  final bool hasLegend;
+  final double spaceBetweenLegendAndTimeLine;
 }
 
 class _TimelineDecoration extends Decoration {
@@ -43,6 +47,8 @@ class _TimelineDecoration extends Decoration {
     required this.timelinewidth,
     required this.hasIcon,
     required this.labelTextPainter,
+    required this.hasLegend,
+    required this.spaceBetweenLegendAndTimeLine,
   });
 
   final double iconSize;
@@ -53,6 +59,8 @@ class _TimelineDecoration extends Decoration {
   final double timelinewidth;
   final bool hasIcon;
   final TextPainter? labelTextPainter;
+  final bool hasLegend;
+  final double spaceBetweenLegendAndTimeLine;
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
@@ -66,6 +74,8 @@ class _TimelineDecoration extends Decoration {
       isLast: isLast,
       hasIcon: hasIcon,
       labelTextPainter: labelTextPainter,
+      hasLegend: hasLegend,
+      spaceBetweenLegendAndTimeLine: spaceBetweenLegendAndTimeLine,
     );
   }
 }
@@ -81,6 +91,8 @@ class _LeftTimelinePainter extends _TimelinePainter {
     required super.isLast,
     required super.hasIcon,
     required super.labelTextPainter,
+    required super.hasLegend,
+    required super.spaceBetweenLegendAndTimeLine,
   });
 
   @override
@@ -108,6 +120,14 @@ class _LeftTimelinePainter extends _TimelinePainter {
     final Offset leftBottomOffset =
         size.bottomLeft(Offset(leftOffset.dx, leftOffset.dy * 2));
 
+    if (isFirst && hasLegend) {
+      canvas.drawLine(
+          Offset(leftTopOffset.dx,
+              leftTopOffset.dy - spaceBetweenLegendAndTimeLine),
+          centerTopOffset,
+          linePaint);
+    }
+
     if (!isFirst) {
       canvas.drawLine(leftTopOffset, centerTopOffset, linePaint);
     }
@@ -126,55 +146,3 @@ class _LeftTimelinePainter extends _TimelinePainter {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// final Offset leftOffset = Offset(offset.dx + 5.0, offset.dy);
-  // final Offset top = size.topLeft(Offset(leftOffset.dx, 0.0));
-  // final Offset centerOffset = size.center(leftOffset);
-  // final Offset centerTopOffset =
-  //     size.centerLeft(Offset(leftOffset.dx, leftOffset.dy - 5.0));
-  // final Offset bottomLeftOffset = size.bottomLeft(leftOffset);
-  // final Offset leftTopOffset = size.topLeft(leftOffset);
-  // final Offset centerOffset = size.center(leftOffset);
-  // final Offset centerTopOffset =
-  //     size.centerLeft(Offset(leftOffset.dx, leftOffset.dy - 5.0));
-  // final Offset centerLeftOffset = size.centerLeft(leftOffset);
-  // final Offset centerRightOffset = size.centerRight(leftOffset);
-  // final Offset leftBottomOffset = size.bottomLeft(leftOffset);
-
-  // Dev.print(centerOffset.dx / 2);
-
-  // if (labelTextPainter != null) {
-  //   labelTextPainter!.paint(
-  //     canvas,
-  //     Offset(
-  //       centerOffset.dx / 2,
-  //       (centerOffset.dy - (labelTextPainter!.size.height / 2) - 10),
-  //     ),
-  //   );
-  // }
-
-  // if (!isFirst) {
-  //   canvas.drawLine(leftTopOffset, leftBottomOffset, linePaint);
-  // }
-
-  // canvas.drawLine(centerLeftOffset,
-  //     Offset(centerRightOffset.dx, centerRightOffset.dy), linePaint);
-  // canvas.drawCircle(centerLeftOffset, iconBackgroundRadius / 2, circlePaint);

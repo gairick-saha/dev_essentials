@@ -21,6 +21,14 @@ class TimelineListView extends StatelessWidget {
     this.iconSize = 24.0,
     this.labelStyle,
     this.timelineWidth,
+    this.legendText,
+    this.legendColor,
+    this.legendTextStyle,
+    this.spaceBetweenLegendAndTimeLine = 16.0,
+    this.legendTextPadding = const EdgeInsets.symmetric(
+      horizontal: 10.0,
+      vertical: 5.0,
+    ),
   })  : isSliverItem = false,
         useBuilder = false,
         itemCount = children.length,
@@ -43,6 +51,14 @@ class TimelineListView extends StatelessWidget {
     this.lineWidth = 2.5,
     this.labelStyle,
     this.timelineWidth,
+    this.legendText,
+    this.legendColor,
+    this.legendTextStyle,
+    this.spaceBetweenLegendAndTimeLine = 16.0,
+    this.legendTextPadding = const EdgeInsets.symmetric(
+      horizontal: 10.0,
+      vertical: 5.0,
+    ),
   })  : isSliverItem = false,
         useBuilder = true,
         super(key: key);
@@ -58,6 +74,14 @@ class TimelineListView extends StatelessWidget {
     this.lineWidth = 2.5,
     this.labelStyle,
     this.timelineWidth,
+    this.legendText,
+    this.legendColor,
+    this.legendTextStyle,
+    this.spaceBetweenLegendAndTimeLine = 16.0,
+    this.legendTextPadding = const EdgeInsets.symmetric(
+      horizontal: 10.0,
+      vertical: 5.0,
+    ),
   })  : isSliverItem = true,
         shrinkWrap = null,
         primary = null,
@@ -83,27 +107,109 @@ class TimelineListView extends StatelessWidget {
   final TimelineListItemBuilder itemBuilder;
   final TextStyle? labelStyle;
   final double? timelineWidth;
+  final String? legendText;
+  final Color? legendColor;
+  final TextStyle? legendTextStyle;
+  final double spaceBetweenLegendAndTimeLine;
+  final EdgeInsetsGeometry legendTextPadding;
 
   @override
   Widget build(BuildContext context) {
-    if (isSliverItem) {
-      return SliverPadding(
-        padding: padding ?? EdgeInsets.zero,
-        sliver: SliverList.builder(
-          itemCount: itemCount,
-          itemBuilder: _buildTimelineItem,
+    EdgeInsetsGeometry timelinePadding = padding ?? EdgeInsets.zero;
+    Widget? legend;
+    TextPainter? legendTextPainter;
+    TextSpan? legendTextSpan;
+    ;
+
+    if (legendText != null) {
+      legendTextSpan = TextSpan(
+        text: legendText,
+        style: legendTextStyle ??
+            Dev.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+      );
+
+      legendTextPainter = TextPainter(
+        text: legendTextSpan,
+        textDirection: TextDirection.ltr,
+      );
+
+      legendTextPainter.layout(
+        minWidth: 0,
+        maxWidth: double.infinity,
+      );
+
+      timelinePadding = timelinePadding.add(
+        EdgeInsets.only(
+          left:
+              (legendTextPainter.size.width / 3) + (legendTextPadding.vertical),
+          top: spaceBetweenLegendAndTimeLine,
         ),
       );
+
+      legend = Align(
+        alignment: Alignment.topLeft,
+        child: Material(
+          animationDuration: kThemeAnimationDuration,
+          color: legendColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: lineColor ?? Dev.theme.colorScheme.primary,
+              width: lineWidth,
+            ),
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          elevation: 0,
+          child: Padding(
+            padding: legendTextPadding,
+            child: Text.rich(
+              legendTextSpan,
+              textScaleFactor: Dev.textScaleFactor,
+              style: legendTextSpan.style,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (isSliverItem) {
+      return MultiSliver(
+        children: [
+          if (legend != null)
+            SliverToBoxAdapter(
+              child: legend,
+            ),
+          SliverPadding(
+            padding: timelinePadding,
+            sliver: SliverList.builder(
+              itemCount: itemCount,
+              itemBuilder: _buildTimelineItem,
+            ),
+          ),
+        ],
+      );
     } else {
-      return ListView.builder(
-        physics: physics,
-        shrinkWrap: shrinkWrap ?? true,
-        controller: controller,
-        padding: padding ?? EdgeInsets.zero,
-        reverse: reverse,
-        primary: primary,
-        itemCount: itemCount,
-        itemBuilder: _buildTimelineItem,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (legend != null) legend,
+          Flexible(
+            child: ListView.builder(
+              physics: physics,
+              shrinkWrap: shrinkWrap ?? true,
+              controller: controller,
+              padding: timelinePadding,
+              reverse: reverse,
+              primary: primary,
+              itemCount: itemCount,
+              itemBuilder: _buildTimelineItem,
+            ),
+          ),
+        ],
       );
     }
   }
@@ -181,6 +287,9 @@ class TimelineListView extends StatelessWidget {
                       timelinewidth: timelineContainerwidth,
                       hasIcon: model.icon != null || model.imageUrl != null,
                       labelTextPainter: textPainter,
+                      hasLegend: legendText != null,
+                      spaceBetweenLegendAndTimeLine:
+                          spaceBetweenLegendAndTimeLine,
                     ),
                     width: timelineContainerwidth,
                     alignment: Alignment.centerLeft,

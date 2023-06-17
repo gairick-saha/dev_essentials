@@ -15,14 +15,14 @@ extension NavigationExtension on DevEssential {
 
   String? get previousRoute => routing.previousRoute;
 
-  GlobalKey<NavigatorState>? nestedKey(int key) {
+  GlobalKey<NavigatorState> nestedKey(int key) {
     nestedNavigatorKeys.putIfAbsent(
       key,
       () => GlobalKey<NavigatorState>(
         debugLabel: 'DevEssential nested key: ${key.toString()}',
       ),
     );
-    return nestedNavigatorKeys[key];
+    return nestedNavigatorKeys[key]!;
   }
 
   GlobalKey<NavigatorState> _global(int? k) {
