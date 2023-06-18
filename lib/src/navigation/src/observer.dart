@@ -13,16 +13,21 @@ String? _extractRouteName(Route? route) {
 class DevEssentialNavigationObserver extends NavigatorObserver {
   DevEssentialNavigationObserver({
     required this.routing,
+    this.isNestedRouting = false,
   });
 
   final DevEssentialRouting routing;
+  final bool isNestedRouting;
 
   @override
   void didPush(Route route, Route? previousRoute) {
     final String? newName = _extractRouteName(route);
     final String? oldName = _extractRouteName(previousRoute);
 
-    Dev.print("GOING TO ROUTE $newName");
+    Dev.print(
+      "GOING TO ROUTE $newName",
+      name: isNestedRouting ? 'DevNestedNavigator' : null,
+    );
 
     routing.updateCurrentRoute(newName);
     routing.updatePreviousRoute(oldName);
@@ -34,8 +39,14 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
     final String? newName = _extractRouteName(newRoute);
     final String? oldName = _extractRouteName(oldRoute);
 
-    Dev.print("REPLACE ROUTE $oldName");
-    Dev.print("NEW ROUTE $newName");
+    Dev.print(
+      "REPLACE ROUTE $oldName",
+      name: isNestedRouting ? 'DevNestedNavigator' : null,
+    );
+    Dev.print(
+      "NEW ROUTE $newName",
+      name: isNestedRouting ? 'DevNestedNavigator' : null,
+    );
 
     routing.updateCurrentRoute(newName);
     routing.updatePreviousRoute(oldName);
@@ -47,7 +58,10 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
     final String? currentRoute = _extractRouteName(route);
     final String? newRoute = _extractRouteName(previousRoute);
 
-    Dev.print("CLOSED ROUTE $currentRoute");
+    Dev.print(
+      "CLOSED ROUTE $currentRoute",
+      name: isNestedRouting ? 'DevNestedNavigator' : null,
+    );
 
     if (previousRoute is PageRoute) {
       routing.updateCurrentRoute(_extractRouteName(previousRoute) ?? '');
@@ -62,7 +76,10 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
   void didRemove(Route route, Route? previousRoute) {
     final String? currentRoute = _extractRouteName(route);
 
-    Dev.print("REMOVED ROUTE $currentRoute");
+    Dev.print(
+      "REMOVED ROUTE $currentRoute",
+      name: isNestedRouting ? 'DevNestedNavigator' : null,
+    );
 
     routing.updateCurrentRoute(previousRoute?.settings.name);
     routing.updatePreviousRoute(route.settings.name);

@@ -80,7 +80,7 @@ class DevEssentialMaterialApp extends HookWidget {
             themeMode: rootHookState.themeMode,
             navigatorKey: rootHookState.routing.rootNavigatorKey,
             navigatorObservers: [
-              Dev.navigatorObserver,
+              Dev.navigatorObserver(),
               BotToastNavigatorObserver(),
               ...navigatorObservers,
             ],
@@ -96,6 +96,8 @@ class DevEssentialMaterialApp extends HookWidget {
             },
             home: home == null && pages != null ? null : home,
             onGenerateRoute: pages == null && home != null ? null : generator,
+            onGenerateInitialRoutes:
+                pages == null && home != null ? null : initialRoutesGenerate,
           );
         },
       ),
@@ -111,8 +113,10 @@ class DevEssentialMaterialApp extends HookWidget {
     );
   }
 
-  Route<dynamic> generator(RouteSettings settings) => PagePredict(
+  Route<dynamic> generator(RouteSettings settings) => Dev.onGenerateRoute(
         settings: settings,
-        unknownRoute: unknownRoute ?? DevEssentialPages.defaultUnknownRoute,
-      ).page();
+      );
+
+  List<Route<dynamic>> initialRoutesGenerate(String name) =>
+      Dev.initialRoutesGenerate(name);
 }

@@ -99,6 +99,7 @@ class DevEssentialHookState
   DevEssentialCustomTransition? customTransition;
 
   final DevEssentialRouting routing = DevEssentialRouting();
+  final DevEssentialRouting nestedRouting = DevEssentialRouting();
 
   void _addPages() {
     if (hook.pages != null) {

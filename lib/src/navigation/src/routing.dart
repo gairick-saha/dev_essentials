@@ -7,6 +7,8 @@ class DevEssentialRouting {
     routes: [],
   );
 
+  void clearPages() => routingTree.clearRoutingTree();
+
   void addPages(List<DevEssentialPage> pages) => routingTree.addRoutes(pages);
 
   final GlobalKey<NavigatorState> rootNavigatorKey =
@@ -14,7 +16,7 @@ class DevEssentialRouting {
 
   final Map<int, GlobalKey<NavigatorState>> nestedNavigatorKeys = {};
 
-  late String? _currentRoute, _previousRoute;
+  String? _currentRoute, _previousRoute;
 
   String? get currentRoute => _currentRoute;
 

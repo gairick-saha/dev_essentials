@@ -13,17 +13,11 @@ class PagePredict {
     this.settings,
   });
 
-  DevEssentialRoute<T> fromPages<T>(List<DevEssentialPage> pages) {
-    _checkRoute(
-        pages: pages
-            .map(
-              (e) => e.copyWith(
-                name: e.name!.startsWith('/')
-                    ? e.name![0].replaceAll('/', '') + e.name!.substring(1)
-                    : e.name,
-              ),
-            )
-            .toList());
+  DevEssentialRoute<T> page<T>({
+    bool isNestedRouting = false,
+    String? initialNestedRoute,
+  }) {
+    _checkRoute(isNestedRouting, initialNestedRoute: initialNestedRoute);
     final DevEssentialPage page = (isUnknown ? unknownRoute : route)!;
     return DevEssentialRoute<T>(
       settings: isUnknown
@@ -36,44 +30,21 @@ class PagePredict {
     );
   }
 
-  DevEssentialRoute<T> page<T>() {
-    _checkRoute();
-    final DevEssentialPage page = (isUnknown ? unknownRoute : route)!;
-    return DevEssentialRoute<T>(
-      settings: isUnknown
-          ? RouteSettings(
-              name: page.name,
-              arguments: settings!.arguments,
-            )
-          : settings,
-      pageBuilder: page.builder,
-    );
-  }
-
-  void _checkRoute({List<DevEssentialPage>? pages}) {
+  void _checkRoute(bool isNestedRouting, {String? initialNestedRoute}) {
     if (settings == null && route != null) {
       settings = route;
     }
 
-    final DevEssentialPage? matchedRoute;
-
-    if (pages != null) {
-      String name = settings!.name!.startsWith('/')
-          ? settings!.name![0].replaceAll('/', '') +
-              settings!.name!.substring(1)
-          : settings!.name!;
-      Dev.print(name);
-      matchedRoute = Dev.routing.routingTree.matchRouteFromListOfPages(
-        pages,
-        name,
-        arguments: settings!.arguments,
-      );
-    } else {
-      matchedRoute = Dev.routing.routingTree.matchRoute(
-        settings!.name!,
-        arguments: settings!.arguments,
-      );
-    }
+    final DevEssentialPage? matchedRoute = isNestedRouting
+        ? Dev.nestedRouting.routingTree.matchRoute(
+            settings!.name!,
+            arguments: settings!.arguments,
+            initialNestedRoute: initialNestedRoute,
+          )
+        : Dev.routing.routingTree.matchRoute(
+            settings!.name!,
+            arguments: settings!.arguments,
+          );
 
     if (matchedRoute == null) {
       isUnknown = true;

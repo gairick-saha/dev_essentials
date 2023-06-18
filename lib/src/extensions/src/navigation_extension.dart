@@ -6,12 +6,15 @@ extension NavigationExtension on DevEssential {
 
   DevEssentialRouting get routing => _hookState.routing;
 
+  DevEssentialRouting get nestedRouting => _hookState.nestedRouting;
+
   GlobalKey<NavigatorState> get key => routing.rootNavigatorKey;
 
   Map<int, GlobalKey<NavigatorState>> get nestedNavigatorKeys =>
       routing.nestedNavigatorKeys;
 
-  String? get currentRoute => routing.currentRoute;
+  String? currentRoute(bool isNestedRouting) =>
+      isNestedRouting ? nestedRouting.currentRoute : routing.currentRoute;
 
   String? get previousRoute => routing.previousRoute;
 
@@ -26,22 +29,22 @@ extension NavigationExtension on DevEssential {
   }
 
   GlobalKey<NavigatorState> _global(int? k) {
-    GlobalKey<NavigatorState> newKey;
+    GlobalKey<NavigatorState> navKey;
 
     if (k == null) {
-      newKey = key;
+      navKey = key;
     } else {
       if (!nestedNavigatorKeys.containsKey(k)) {
         throw 'Navigator with id ($k) not found';
       }
-      newKey = nestedNavigatorKeys[k]!;
+      navKey = nestedNavigatorKeys[k]!;
     }
 
-    if (newKey.currentContext == null) {
+    if (navKey.currentContext == null) {
       throw """You are trying to use contextless navigation without a DevEssentialMaterialApp.""";
     }
 
-    return newKey;
+    return navKey;
   }
 
   WidgetBuilder _resolvePage(dynamic page, String method) {
@@ -92,10 +95,9 @@ extension NavigationExtension on DevEssential {
     int? id,
     String? routeName,
     dynamic arguments,
-    bool preventDuplicates = true,
   }) async {
     routeName ??= "/${page.runtimeType}";
-    if (preventDuplicates && routeName == currentRoute) {
+    if (routeName == currentRoute(id != null)) {
       return null;
     }
     return _global(id).currentState?.push<T>(
@@ -114,11 +116,10 @@ extension NavigationExtension on DevEssential {
     int? id,
     String? routeName,
     dynamic arguments,
-    bool preventDuplicates = true,
   }) {
     routeName ??= "/${page.runtimeType.toString()}";
     routeName = _cleanRouteName(routeName);
-    if (preventDuplicates && routeName == currentRoute) {
+    if (routeName == currentRoute(id != null)) {
       return null;
     }
     return _global(id).currentState?.pushReplacement(
@@ -133,43 +134,43 @@ extension NavigationExtension on DevEssential {
   }
 
   Future<T?>? toNamed<T>(
-    String route, {
+    String routeName, {
     Object? arguments,
     int? id,
     Map<String, String>? parameters,
   }) {
-    if (route == currentRoute) {
+    if (routeName == currentRoute(id != null)) {
       return null;
     }
 
     if (parameters != null) {
-      final Uri uri = Uri(path: route, queryParameters: parameters);
-      route = uri.toString();
+      final Uri uri = Uri(path: routeName, queryParameters: parameters);
+      routeName = uri.toString();
     }
 
     return _global(id).currentState?.pushNamed<T>(
-          route,
+          routeName,
           arguments: arguments,
         );
   }
 
   Future<T?>? offNamed<T>(
-    String route, {
+    String routeName, {
     Object? arguments,
     int? id,
     Map<String, String>? parameters,
   }) {
-    if (route == currentRoute) {
+    if (routeName == currentRoute(id != null)) {
       return null;
     }
 
     if (parameters != null) {
-      final Uri uri = Uri(path: route, queryParameters: parameters);
-      route = uri.toString();
+      final Uri uri = Uri(path: routeName, queryParameters: parameters);
+      routeName = uri.toString();
     }
 
     return _global(id).currentState?.pushReplacementNamed(
-          route,
+          routeName,
           arguments: arguments,
         );
   }
@@ -181,37 +182,45 @@ extension NavigationExtension on DevEssential {
       _global(id).currentState?.pushAndRemoveUntil<T>(page, predicate);
 
   Future<T?>? offNamedUntil<T>(
-    String page,
+    String newRouteName,
     RoutePredicate predicate, {
     int? id,
     Object? arguments,
     Map<String, String>? parameters,
   }) {
+    if (newRouteName == currentRoute(id != null)) {
+      return null;
+    }
+
     if (parameters != null) {
-      final Uri uri = Uri(path: page, queryParameters: parameters);
-      page = uri.toString();
+      final Uri uri = Uri(path: newRouteName, queryParameters: parameters);
+      newRouteName = uri.toString();
     }
 
     return _global(id).currentState?.pushNamedAndRemoveUntil<T>(
-          page,
+          newRouteName,
           predicate,
           arguments: arguments,
         );
   }
 
   Future<T?>? offAndToNamed<T>(
-    String page, {
+    String routeName, {
     dynamic arguments,
     int? id,
     Object? result,
     Map<String, String>? parameters,
   }) {
+    if (routeName == currentRoute(id != null)) {
+      return null;
+    }
+
     if (parameters != null) {
-      final uri = Uri(path: page, queryParameters: parameters);
-      page = uri.toString();
+      final uri = Uri(path: routeName, queryParameters: parameters);
+      routeName = uri.toString();
     }
     return _global(id).currentState?.popAndPushNamed(
-          page,
+          routeName,
           arguments: arguments,
           result: result,
         );
@@ -227,6 +236,10 @@ extension NavigationExtension on DevEssential {
     int? id,
     Map<String, String>? parameters,
   }) {
+    if (newRouteName == currentRoute(id != null)) {
+      return null;
+    }
+
     if (parameters != null) {
       final Uri uri = Uri(path: newRouteName, queryParameters: parameters);
       newRouteName = uri.toString();
@@ -239,18 +252,38 @@ extension NavigationExtension on DevEssential {
         );
   }
 
-  Route<DevEssentialRoute> nestedRoutes({
+  Route<DevEssentialRoute> onGenerateRoute({
     required RouteSettings settings,
-    required List<DevEssentialPage> pages,
     DevEssentialPage? unknownRoute,
+    bool isNestedRouting = false,
   }) =>
       PagePredict(
         settings: settings,
         unknownRoute: unknownRoute ?? DevEssentialPages.defaultUnknownRoute,
-      ).fromPages(pages);
+      ).page(
+        isNestedRouting: isNestedRouting,
+      );
 
-  DevEssentialNavigationObserver get navigatorObserver =>
-      DevEssentialNavigationObserver(routing: routing);
+  List<Route<dynamic>> initialRoutesGenerate(
+    String name, {
+    DevEssentialPage? unknownRoute,
+    bool isNestedRouting = false,
+  }) =>
+      [
+        PagePredict(
+          settings: RouteSettings(name: name),
+          unknownRoute: unknownRoute ?? DevEssentialPages.defaultUnknownRoute,
+        ).page(
+          isNestedRouting: isNestedRouting,
+        ),
+      ];
+
+  DevEssentialNavigationObserver navigatorObserver(
+          {bool isNestedRouting = false}) =>
+      DevEssentialNavigationObserver(
+        routing: isNestedRouting ? nestedRouting : routing,
+        isNestedRouting: isNestedRouting,
+      );
 
   Future<bool> handleNestedNavigationBackButton() async {
     return false;
