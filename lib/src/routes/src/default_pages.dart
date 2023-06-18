@@ -22,11 +22,6 @@ class DevEssentialPages {
             create: (context) {
               SplashCubit cubit = SplashCubit(splashConfig: splashConfig);
               cubit.initSplash();
-              if (splashConfig.onSplashInitCallback != null) {
-                splashConfig.onSplashInitCallback!(cubit.loadSplash);
-              } else {
-                cubit.loadSplash();
-              }
               return cubit;
             },
             child: const SplashView(),

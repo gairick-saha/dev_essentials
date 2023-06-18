@@ -12,8 +12,7 @@ class SplashConfig {
     this.darkForegroundColor,
     this.splashDuration = const Duration(seconds: 3),
     this.customUiBuilder,
-    this.onSplashInitCallback,
-    this.routeAfterSplash,
+    required this.routeAfterSplash,
   });
 
   final String? logoPath;
@@ -26,8 +25,7 @@ class SplashConfig {
   final Color? darkForegroundColor;
   final Duration splashDuration;
   final SplashUIBuilder? customUiBuilder;
-  final OnSplashInitCallback? onSplashInitCallback;
-  final String? routeAfterSplash;
+  final OnSplashInitCallback routeAfterSplash;
 
   SplashConfig copyWith({
     String? logoPath,
@@ -41,7 +39,7 @@ class SplashConfig {
     Duration? splashDuration,
     SplashUIBuilder? customUiBuilder,
     OnSplashInitCallback? onSplashInitCallback,
-    String? routeAfterSplash,
+    OnSplashInitCallback? routeAfterSplash,
   }) =>
       SplashConfig(
         logoPath: logoPath ?? this.logoPath,
@@ -54,7 +52,6 @@ class SplashConfig {
         darkForegroundColor: darkForegroundColor ?? this.darkForegroundColor,
         splashDuration: splashDuration ?? this.splashDuration,
         customUiBuilder: customUiBuilder ?? this.customUiBuilder,
-        onSplashInitCallback: onSplashInitCallback ?? this.onSplashInitCallback,
         routeAfterSplash: routeAfterSplash ?? this.routeAfterSplash,
       );
 }

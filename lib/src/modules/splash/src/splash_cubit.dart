@@ -17,22 +17,29 @@ class SplashCubit extends Cubit<SplashState> {
       appVersion: packageInfo.version,
     );
     emit(newStateBeforSplashStarted);
+    _loadSplash();
   }
 
-  void loadSplash() async {
+  void _loadSplash() async {
     Dev.print("Splash Loading...");
 
-    Duration splashDuration = state.splashConfig?.splashDuration ?? 3.seconds;
+    if (state.splashConfig?.routeAfterSplash != null) {
+      String routeWhenSplashComplete =
+          await state.splashConfig!.routeAfterSplash();
 
-    String routeWhenSplashComplete =
-        state.splashConfig?.routeAfterSplash ?? DevEssentialRoutes.auth;
-
-    await Future.delayed(splashDuration, () {
-      SplashState newStateAfterSplashCompleted =
-          state.copyWith(isSplashCompleted: true);
-      Dev.print("Splash Completed...");
-      Dev.offAllNamed(routeWhenSplashComplete);
-      emit(newStateAfterSplashCompleted);
-    });
+      if (routeWhenSplashComplete.isNotEmpty) {
+        Duration splashDuration =
+            state.splashConfig?.splashDuration ?? 3.seconds;
+        await Future.delayed(splashDuration, () {
+          SplashState newStateAfterSplashCompleted =
+              state.copyWith(isSplashCompleted: true);
+          Dev.print("Splash Completed...");
+          Dev.offAllNamed(routeWhenSplashComplete);
+          emit(newStateAfterSplashCompleted);
+        });
+      } else {
+        Dev.print('Invalid routeName: $routeWhenSplashComplete');
+      }
+    }
   }
 }
