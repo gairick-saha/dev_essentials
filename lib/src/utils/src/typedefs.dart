@@ -5,7 +5,8 @@ typedef SplashUIBuilder = Widget Function(
   Color? backgroundColor,
 );
 
-typedef OnSplashInitCallback = Future<String> Function();
+typedef OnSplashInitCallback = Future<String> Function(
+    BuildContext splashContext);
 
 typedef DevEssentialSvg = SvgPicture;
 

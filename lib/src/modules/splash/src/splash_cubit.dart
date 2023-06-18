@@ -25,7 +25,7 @@ class SplashCubit extends Cubit<SplashState> {
 
     if (state.splashConfig?.routeAfterSplash != null) {
       String routeWhenSplashComplete =
-          await state.splashConfig!.routeAfterSplash();
+          await state.splashConfig!.routeAfterSplash(Dev.context);
 
       if (routeWhenSplashComplete.isNotEmpty) {
         Duration splashDuration =
