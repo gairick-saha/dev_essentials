@@ -20,7 +20,7 @@ class SplashView extends StatelessWidget {
           logoType = lookupMimeType(splashConfig.logoPath!) ?? '';
           logoType = logoType.split('/').last;
           if (logoType.startsWith('svg')) {
-            logo = DevEssentialSvg.asset(splashConfig.logoPath!);
+            logo = DevEssentialSvgPicture.asset(splashConfig.logoPath!);
           } else {
             logo = Image.asset(splashConfig.logoPath!);
           }

@@ -3,6 +3,12 @@ part of '../utils.dart';
 class DevEssentialUtility {
   DevEssentialUtility._();
 
+  static RegExp alphaNumericPasswordRegex =
+      RegExp(r"^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$");
+
+  static RegExp phoneRegex =
+      RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+
   static Future<String?> downloadFile(String url) async {
     final Directory tempDir = await Dev.tempDirectory();
     return await DevEssentialNetworkClient().download(
@@ -290,7 +296,7 @@ class DevEssentialUtility {
 
   static bool isPhoneNumber(String s) {
     if (s.length > 16 || s.length < 9) return false;
-    return hasMatch(s, r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
+    return hasMatch(s, phoneRegex.pattern);
   }
 
   static bool isDateTime(String s) =>
