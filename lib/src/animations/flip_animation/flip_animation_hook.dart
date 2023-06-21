@@ -1,11 +1,13 @@
 part of '../dev_animations.dart';
 
 FlipAnimationHookState useFlipAnimationHook({
+  required FlipAnimationController controller,
   required Duration flipDuration,
 }) {
   TickerProvider vsync = useSingleTickerProvider();
   return use<FlipAnimationHookState>(
     FlipAnimationHook(
+      controller: controller,
       vsync: vsync,
       flipDuration: flipDuration,
     ),
@@ -14,10 +16,12 @@ FlipAnimationHookState useFlipAnimationHook({
 
 class FlipAnimationHook extends Hook<FlipAnimationHookState> {
   const FlipAnimationHook({
+    required this.controller,
     required this.vsync,
     required this.flipDuration,
   });
 
+  final FlipAnimationController controller;
   final TickerProvider vsync;
   final Duration flipDuration;
 
@@ -41,6 +45,7 @@ class FlipAnimationHookState
       duration: hook.flipDuration,
     );
     flipAnimationController.addListener(_listenAnimationController);
+    hook.controller.addListener(_listenAnimationFlips);
     setState(() {});
   }
 
@@ -51,13 +56,20 @@ class FlipAnimationHookState
     super.dispose();
   }
 
+  void _listenAnimationFlips() {
+    if (hook.controller.isFront) {
+      flipAnimationController.reverse();
+    } else {
+      flipAnimationController.forward();
+    }
+  }
+
   void _listenAnimationController() {
     if (isFront && flipAnimationController.value > 0.5) {
       isFront = false;
     } else if (!isFront && flipAnimationController.value < 0.5) {
       isFront = true;
     }
-
     setState(() {});
   }
 

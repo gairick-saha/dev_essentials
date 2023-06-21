@@ -3,21 +3,25 @@ part of '../dev_animations.dart';
 class FlipAnimationWrapper extends HookWidget {
   const FlipAnimationWrapper({
     Key? key,
+    required this.controller,
     required this.firstChild,
     required this.secondChild,
     this.flipDuration = const Duration(milliseconds: 300),
     this.flipDirection = Axis.horizontal,
   }) : super(key: key);
 
-  final FlipAnimationChildBuilder firstChild;
-  final FlipAnimationChildBuilder secondChild;
+  final FlipAnimationController controller;
+  final Widget firstChild;
+  final Widget secondChild;
   final Duration flipDuration;
   final Axis flipDirection;
 
   @override
   Widget build(BuildContext context) {
-    final FlipAnimationHookState flipAnimationHookState =
-        useFlipAnimationHook(flipDuration: flipDuration);
+    final FlipAnimationHookState flipAnimationHookState = useFlipAnimationHook(
+      controller: controller,
+      flipDuration: flipDuration,
+    );
     var child = AnimatedBuilder(
       animation: flipAnimationHookState.flipAnimationController,
       builder: (context, child) => Transform(
@@ -31,17 +35,11 @@ class FlipAnimationWrapper extends HookWidget {
         index: flipAnimationHookState.isFront ? 0 : 1,
         alignment: Alignment.center,
         children: [
-          firstChild(
-            context,
-            flipAnimationHookState.flipAnimationController,
-          ),
+          firstChild,
           Transform(
             transform: _buildSecondChildMatrix4(),
             alignment: Alignment.center,
-            child: secondChild(
-              context,
-              flipAnimationHookState.flipAnimationController,
-            ),
+            child: secondChild,
           ),
         ],
       ),
