@@ -15,7 +15,7 @@ dependencies:
   collection: ^1.17.0
   intl: ^0.18.0
   dio: ^5.1.1
-  progress_loading_button: ^2.0.0
+  progress_loading_button: ^2.0.2
   keyboard_dismisser: ^3.0.0
   package_info_plus: ^4.0.0
   device_info_plus: ^9.0.0

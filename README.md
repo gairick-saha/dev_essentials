@@ -264,6 +264,124 @@ DevEssentialToast.showAnimationWidget(...)
 - SubmitButton
 - ScrollableScaffoldWrapper
 - LoadingIndictor
+- TimelineListView
+
+
+# TimelineListView example
+ For using TimelineListView inside a CustomScrollView please use `TimelineListView.sliver()`
+
+```dart 
+TimelineListView.builder(
+  padding: const EdgeInsets.only(bottom: 20),
+  itemCount: 3,
+  lineColor: AppColors.lightGreyTwo,
+  labelStyle: Dev.textTheme.labelMedium?.copyWith(
+    fontWeight: FontWeight.w500,
+    color: AppColors.mediumGrey,
+  ),
+  lineWidth: 1.0,
+  legendText: DateTime.now().add(1.days).custom('dd MMM, yyyy'),
+  legendTextStyle: Dev.textTheme.titleMedium?.copyWith(
+    fontWeight: FontWeight.w500,
+  ),
+  legendColor: AppColors.duskyBlue10,
+  itemBuilder: (BuildContext context, int index) => TimelineListItem(
+    height: 75,
+    width: double.infinity,
+    label: DateTime.now().time12HourFormat().toLowerCase(),
+    child: (context, isFirst, isLast) => Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        side: const BorderSide(
+          width: 1,
+          color: AppColors.lightGrey,
+        ),
+      ),
+      margin: EdgeInsets.only(
+        top: isFirst ? 0.0 : 4.0,
+        bottom: isLast ? 0.0 : 4.0,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'User Name: ',
+                  ),
+                  TextSpan(
+                    text: 'Din Djarin ',
+                    style: Dev.theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              textScaleFactor: Dev.textScaleFactor,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Dev.theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.mediumGrey,
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'Role: ',
+                  ),
+                  TextSpan(
+                    text: 'User',
+                    style: Dev.theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textScaleFactor: Dev.textScaleFactor,
+              style: Dev.theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.mediumGrey,
+              ),
+            ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'Activity Type: ',
+                  ),
+                  TextSpan(
+                    text: 'File access(xyz.file)',
+                    style: Dev.theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textScaleFactor: Dev.textScaleFactor,
+              style: Dev.theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.mediumGrey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ),
+)
+```
 
 # Available Modules
 

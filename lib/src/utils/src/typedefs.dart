@@ -21,3 +21,8 @@ typedef DevEssentialReactiveFormBuilder = ReactiveFormBuilder;
 typedef DevEssentialReactiveCheckBox = ReactiveCheckbox;
 typedef DevEssentialReactiveCheckboxListTile = ReactiveCheckboxListTile;
 typedef DevEssentialReactiveDropdownField<T> = ReactiveDropdownField<T>;
+
+typedef FlipAnimationChildBuilder = Widget Function(
+  BuildContext context,
+  AnimationController flipAnimationController,
+);
