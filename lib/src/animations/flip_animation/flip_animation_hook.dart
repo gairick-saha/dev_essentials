@@ -38,7 +38,7 @@ class FlipAnimationHookState
   @override
   void initHook() {
     super.initHook();
-    isFront = true;
+    isFront = hook.controller.value;
     flipAnimationController = AnimationController(
       value: isFront ? 0 : 1,
       vsync: hook.vsync,
@@ -53,6 +53,7 @@ class FlipAnimationHookState
   void dispose() {
     flipAnimationController.removeListener(_listenAnimationController);
     flipAnimationController.dispose();
+    hook.controller.removeListener(_listenAnimationFlips);
     super.dispose();
   }
 
