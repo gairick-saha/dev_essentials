@@ -26,3 +26,4 @@ part 'src/media_query_extension.dart';
 part 'src/path_helpers_extension.dart';
 part 'src/dialog_extension.dart';
 part 'src/bottomsheet_extension.dart';
+part 'src/overlay_extension.dart';
