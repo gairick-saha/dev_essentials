@@ -28,15 +28,24 @@ class SplashCubit extends Cubit<SplashState> {
           await state.splashConfig!.routeAfterSplash(Dev.context);
 
       if (routeWhenSplashComplete.isNotEmpty) {
-        Duration splashDuration =
-            state.splashConfig?.splashDuration ?? 3.seconds;
-        await Future.delayed(splashDuration, () {
-          SplashState newStateAfterSplashCompleted =
+        Duration? splashDuration = state.splashConfig?.splashDuration;
+        late SplashState newStateAfterSplashCompleted;
+        if (splashDuration != null) {
+          Dev.print(
+              "Splash loading for ${splashDuration.inSeconds} seconds...");
+          await Future.delayed(splashDuration, () {
+            newStateAfterSplashCompleted =
+                state.copyWith(isSplashCompleted: true);
+          });
+        } else {
+          Dev.print("Splash loading...");
+          newStateAfterSplashCompleted =
               state.copyWith(isSplashCompleted: true);
-          Dev.print("Splash Completed...");
-          Dev.offAllNamed(routeWhenSplashComplete);
-          emit(newStateAfterSplashCompleted);
-        });
+        }
+
+        Dev.print("Splash Completed...");
+        Dev.offAllNamed(routeWhenSplashComplete);
+        emit(newStateAfterSplashCompleted);
       } else {
         Dev.print('Invalid routeName: $routeWhenSplashComplete');
       }

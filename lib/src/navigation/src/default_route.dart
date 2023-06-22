@@ -48,6 +48,8 @@ class DevEssentialRoute<T> extends PageRoute<T> with _RouteTransitionMixin<T> {
   final DevEssentialCustomTransition? customTransition;
   final Curve? curve;
 
+  String? get routeName => settings.name;
+
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
 

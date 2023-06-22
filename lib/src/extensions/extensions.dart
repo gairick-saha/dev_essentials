@@ -24,3 +24,5 @@ part 'src/dev_essential_extension.dart';
 part 'src/navigation_extension.dart';
 part 'src/media_query_extension.dart';
 part 'src/path_helpers_extension.dart';
+part 'src/dialog_extension.dart';
+part 'src/bottomsheet_extension.dart';

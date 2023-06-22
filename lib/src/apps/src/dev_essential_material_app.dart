@@ -78,7 +78,7 @@ class DevEssentialMaterialApp extends HookWidget {
             theme: rootHookState.theme,
             darkTheme: rootHookState.darkTheme,
             themeMode: rootHookState.themeMode,
-            navigatorKey: rootHookState.routing.rootNavigatorKey,
+            navigatorKey: rootHookState.rootNavigatorKey,
             navigatorObservers: [
               Dev.navigatorObserver(),
               BotToastNavigatorObserver(),
@@ -115,8 +115,12 @@ class DevEssentialMaterialApp extends HookWidget {
 
   Route<dynamic> generator(RouteSettings settings) => Dev.onGenerateRoute(
         settings: settings,
+        unknownRoute: unknownRoute,
       );
 
   List<Route<dynamic>> initialRoutesGenerate(String name) =>
-      Dev.initialRoutesGenerate(name);
+      Dev.initialRoutesGenerate(
+        name,
+        unknownRoute: unknownRoute,
+      );
 }

@@ -87,8 +87,9 @@ class DevEssentialReactiveFormTextfield<T>
           validationMessages: validationMessages,
           showErrors: showErrorsCallback,
           builder: (ReactiveFormFieldState<T, String> field) {
-            final state = field as _ReactiveTextFieldState<T>;
-            final effectiveDecoration = decoration
+            final _DevEssentialReactiveTextFieldState<T> state =
+                field as _DevEssentialReactiveTextFieldState<T>;
+            final InputDecoration effectiveDecoration = decoration
                 .applyDefaults(Theme.of(state.context).inputDecorationTheme);
 
             return TextField(
@@ -214,10 +215,10 @@ class DevEssentialReactiveFormTextfield<T>
 
   @override
   ReactiveFormFieldState<T, String> createState() =>
-      _ReactiveTextFieldState<T>();
+      _DevEssentialReactiveTextFieldState<T>();
 }
 
-class _ReactiveTextFieldState<T>
+class _DevEssentialReactiveTextFieldState<T>
     extends ReactiveFocusableFormFieldState<T, String> {
   late TextEditingController _textController;
   late bool _obscureText;
@@ -270,7 +271,6 @@ class _ReactiveTextFieldState<T>
         : ((currentWidget.formControlName ?? '')
             .toLowerCase()
             .contains('password'));
-    ;
     _textController.text = initialValue == null ? '' : initialValue.toString();
   }
 }

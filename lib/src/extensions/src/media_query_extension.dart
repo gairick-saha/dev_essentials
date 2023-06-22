@@ -6,6 +6,14 @@ extension MediaQueryAndThemeExtension on DevEssential {
 
   BuildContext get context => key.currentContext!;
 
+  BuildContext? get overlayContext {
+    BuildContext? overlay;
+    key.currentState?.overlay?.context.visitChildElements((element) {
+      overlay = element;
+    });
+    return overlay;
+  }
+
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
   Size get size => mediaQuery.size;

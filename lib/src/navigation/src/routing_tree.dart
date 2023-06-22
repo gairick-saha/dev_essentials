@@ -20,3 +20,16 @@ class DevEssentialRoutingTree {
     return routes.firstWhereOrNull((element) => element.name == uri.path);
   }
 }
+
+
+// final DevEssentialRoutingTree routingTree = DevEssentialRoutingTree(
+//   routes: [],
+// );
+
+// void clearPages() => routingTree.clearRoutingTree();
+
+// void addPages(List<DevEssentialPage> pages) => routingTree.addRoutes(pages);
+
+// final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
+// final Map<int, GlobalKey<NavigatorState>> nestedNavigatorKeys = {};

@@ -101,9 +101,32 @@ class DevEssentialHookState
   final DevEssentialRouting routing = DevEssentialRouting();
   final DevEssentialRouting nestedRouting = DevEssentialRouting();
 
+  final DevEssentialRoutingTree routingTree = DevEssentialRoutingTree(
+    routes: [],
+  );
+
+  final DevEssentialRoutingTree nestedRoutingTree = DevEssentialRoutingTree(
+    routes: [],
+  );
+
+  final GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>();
+
+  final Map<Object, GlobalKey<NavigatorState>> nestedNavigatorKeys = {};
+
+  GlobalKey<NavigatorState> addNestedNavigatorKey(Object key) {
+    nestedNavigatorKeys.putIfAbsent(
+      key,
+      () => GlobalKey<NavigatorState>(
+        debugLabel: 'DevEssential nested key: ${key.toString()}',
+      ),
+    );
+    return nestedNavigatorKeys[key]!;
+  }
+
   void _addPages() {
     if (hook.pages != null) {
-      routing.addPages(hook.pages!);
+      routingTree.addRoutes(hook.pages!);
     }
   }
 

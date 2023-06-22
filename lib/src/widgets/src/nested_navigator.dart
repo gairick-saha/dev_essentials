@@ -5,11 +5,13 @@ class DevNestedNavigator extends StatefulWidget {
     required this.navigatorKey,
     required this.initialRoute,
     required this.pages,
+    this.unknownRoute,
   }) : super(key: null);
 
   final GlobalKey<NavigatorState> navigatorKey;
   final String initialRoute;
   final List<DevEssentialPage> pages;
+  final DevEssentialPage? unknownRoute;
 
   @override
   State<DevNestedNavigator> createState() => _DevNestedNavigatorState();
@@ -34,8 +36,8 @@ class _DevNestedNavigatorState extends State<DevNestedNavigator> {
 
   void _setPages() {
     pages = widget.pages;
-    Dev.nestedRouting.clearPages();
-    Dev.nestedRouting.addPages(pages);
+    Dev.nestedRoutingTree.clearRoutingTree();
+    Dev.nestedRoutingTree.addRoutes(pages);
     setState(() {});
   }
 
@@ -48,9 +50,10 @@ class _DevNestedNavigatorState extends State<DevNestedNavigator> {
         settings: settings,
         isNestedRouting: true,
       ),
-      onGenerateInitialRoutes: (navigator, initialRoute) =>
+      onGenerateInitialRoutes: (_, String initialRoute) =>
           Dev.initialRoutesGenerate(
         initialRoute,
+        unknownRoute: widget.unknownRoute,
         isNestedRouting: true,
       ),
       observers: [

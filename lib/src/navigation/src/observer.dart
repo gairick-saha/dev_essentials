@@ -1,15 +1,5 @@
 part of '../navigation.dart';
 
-String? _extractRouteName(Route? route) {
-  if (route is DevEssentialRoute) {
-    return route.settings.name;
-  } else if (route?.settings.name != null) {
-    return route!.settings.name;
-  }
-
-  return null;
-}
-
 class DevEssentialNavigationObserver extends NavigatorObserver {
   DevEssentialNavigationObserver({
     required this.routing,
@@ -20,69 +10,126 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
   final bool isNestedRouting;
 
   @override
-  void didPush(Route route, Route? previousRoute) {
-    final String? newName = _extractRouteName(route);
-    final String? oldName = _extractRouteName(previousRoute);
-
-    Dev.print(
-      "GOING TO ROUTE $newName",
-      name: isNestedRouting ? 'DevNestedNavigator' : null,
-    );
-
-    routing.updateCurrentRoute(newName);
-    routing.updatePreviousRoute(oldName);
-    super.didPush(route, previousRoute);
-  }
-
-  @override
-  void didReplace({Route? newRoute, Route? oldRoute}) {
-    final String? newName = _extractRouteName(newRoute);
-    final String? oldName = _extractRouteName(oldRoute);
-
-    Dev.print(
-      "REPLACE ROUTE $oldName",
-      name: isNestedRouting ? 'DevNestedNavigator' : null,
-    );
-    Dev.print(
-      "NEW ROUTE $newName",
-      name: isNestedRouting ? 'DevNestedNavigator' : null,
-    );
-
-    routing.updateCurrentRoute(newName);
-    routing.updatePreviousRoute(oldName);
-    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-  }
-
-  @override
   void didPop(Route route, Route? previousRoute) {
-    final String? currentRoute = _extractRouteName(route);
-    final String? newRoute = _extractRouteName(previousRoute);
+    final _RouteDecoder currentRoute = _RouteDecoder.ofRoute(route);
+    final _RouteDecoder newRoute = _RouteDecoder.ofRoute(previousRoute);
 
-    Dev.print(
-      "CLOSED ROUTE $currentRoute",
-      name: isNestedRouting ? 'DevNestedNavigator' : null,
-    );
-
-    if (previousRoute is PageRoute) {
-      routing.updateCurrentRoute(_extractRouteName(previousRoute) ?? '');
-      routing.updatePreviousRoute(newRoute);
-    } else if ((routing.previousRoute ?? '').isNotEmpty) {
-      routing.updateCurrentRoute(routing.previousRoute);
+    if (currentRoute.isBottomSheet || currentRoute.isDialog) {
+      Dev.print("CLOSE ${currentRoute.logText}");
+    } else if (currentRoute.isDevEssentialRoute) {
+      Dev.print(
+        "CLOSED ROUTE ${currentRoute.logText}",
+        name: isNestedRouting ? 'DevNestedNavigator' : null,
+      );
     }
+
+    routing.update((value) {
+      if (newRoute.isDevEssentialRoute) {
+        value.currentRoute = newRoute.name;
+        value.previousRoute = newRoute.name;
+      } else if ((value.previousRoute ?? '').isNotEmpty) {
+        value.currentRoute = value.previousRoute;
+      }
+
+      value.arguments = newRoute.arguments;
+      value.route = newRoute.route;
+      value.isBack = true;
+      value.isBottomSheet = newRoute.isBottomSheet;
+      value.isDialog = newRoute.isDialog;
+    });
+
     super.didPop(route, previousRoute);
   }
 
   @override
+  void didPush(Route route, Route? previousRoute) {
+    final _RouteDecoder newRoute = _RouteDecoder.ofRoute(route);
+    final _RouteDecoder oldRoute = _RouteDecoder.ofRoute(previousRoute);
+
+    if (newRoute.isBottomSheet || newRoute.isDialog) {
+      Dev.print(
+        "OPEN ${newRoute.logText}",
+        name: isNestedRouting ? 'DevNestedNavigator' : null,
+      );
+    } else if (newRoute.isDevEssentialRoute) {
+      Dev.print(
+        "GOING TO ROUTE ${newRoute.logText}",
+        name: isNestedRouting ? 'DevNestedNavigator' : null,
+      );
+    }
+
+    routing.update((value) {
+      if (newRoute.isDevEssentialRoute) {
+        value.currentRoute = newRoute.name;
+      }
+
+      value.previousRoute = oldRoute.name;
+      value.arguments = newRoute.arguments;
+      value.route = newRoute.route;
+      value.isBack = false;
+      value.isBottomSheet =
+          newRoute.isBottomSheet ? true : (value.isBottomSheet ?? false);
+      value.isDialog = newRoute.isDialog ? true : (value.isDialog ?? false);
+    });
+    super.didPush(route, previousRoute);
+  }
+
+  @override
   void didRemove(Route route, Route? previousRoute) {
-    final String? currentRoute = _extractRouteName(route);
+    final _RouteDecoder currentRoute = _RouteDecoder.ofRoute(route);
 
-    Dev.print(
-      "REMOVED ROUTE $currentRoute",
-      name: isNestedRouting ? 'DevNestedNavigator' : null,
-    );
+    if (currentRoute.isDevEssentialRoute) {
+      Dev.print(
+        "REMOVED ROUTE ${currentRoute.logText}",
+        name: isNestedRouting ? 'DevNestedNavigator' : null,
+      );
+    }
 
-    routing.updateCurrentRoute(previousRoute?.settings.name);
-    routing.updatePreviousRoute(route.settings.name);
+    routing.update((value) {
+      value.route = currentRoute.route;
+      value.isBack = false;
+      value.previousRoute = currentRoute.name;
+      value.isBottomSheet =
+          currentRoute.isBottomSheet ? false : value.isBottomSheet;
+      value.isDialog = currentRoute.isDialog ? false : value.isDialog;
+    });
+
     super.didRemove(route, previousRoute);
+  }
+
+  @override
+  void didReplace({Route? newRoute, Route? oldRoute}) {
+    final _RouteDecoder newRouteData = _RouteDecoder.ofRoute(newRoute);
+    final _RouteDecoder oldRouteData = _RouteDecoder.ofRoute(oldRoute);
+
+    if (oldRouteData.isDevEssentialRoute) {
+      Dev.print(
+        "REPLACE ROUTE ${oldRouteData.logText}",
+        name: isNestedRouting ? 'DevNestedNavigator' : null,
+      );
+    }
+
+    if (newRouteData.isDevEssentialRoute) {
+      Dev.print(
+        "NEW ROUTE ${newRouteData.logText}",
+        name: isNestedRouting ? 'DevNestedNavigator' : null,
+      );
+    }
+
+    routing.update((value) {
+      if (newRouteData.isDevEssentialRoute) {
+        value.currentRoute = newRouteData.name;
+      }
+
+      value.arguments = newRouteData.arguments;
+      value.route = newRouteData.route;
+      value.isBack = false;
+      value.previousRoute = oldRouteData.name;
+      value.isBottomSheet =
+          newRouteData.isBottomSheet ? false : value.isBottomSheet;
+      value.isDialog = newRouteData.isDialog ? false : value.isDialog;
+    });
+
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
   }
 }

@@ -4,31 +4,29 @@ extension NavigationExtension on DevEssential {
   static final DevEssentialHookState _hookState =
       DevEssentialHookState.instance;
 
+  DevEssentialRoutingTree get routingTree => _hookState.routingTree;
+
   DevEssentialRouting get routing => _hookState.routing;
+
+  DevEssentialRoutingTree get nestedRoutingTree => _hookState.nestedRoutingTree;
 
   DevEssentialRouting get nestedRouting => _hookState.nestedRouting;
 
-  GlobalKey<NavigatorState> get key => routing.rootNavigatorKey;
+  GlobalKey<NavigatorState> get key => _hookState.rootNavigatorKey;
 
-  Map<int, GlobalKey<NavigatorState>> get nestedNavigatorKeys =>
-      routing.nestedNavigatorKeys;
+  Map<Object, GlobalKey<NavigatorState>> get nestedNavigatorKeys =>
+      _hookState.nestedNavigatorKeys;
 
   String? currentRoute(bool isNestedRouting) =>
       isNestedRouting ? nestedRouting.currentRoute : routing.currentRoute;
 
-  String? get previousRoute => routing.previousRoute;
+  String? previousRoute(bool isNestedRouting) =>
+      isNestedRouting ? nestedRouting.previousRoute : routing.previousRoute;
 
-  GlobalKey<NavigatorState> nestedKey(int key) {
-    nestedNavigatorKeys.putIfAbsent(
-      key,
-      () => GlobalKey<NavigatorState>(
-        debugLabel: 'DevEssential nested key: ${key.toString()}',
-      ),
-    );
-    return nestedNavigatorKeys[key]!;
-  }
+  GlobalKey<NavigatorState> nestedKey(Object key) =>
+      _hookState.addNestedNavigatorKey(key);
 
-  GlobalKey<NavigatorState> _global(int? k) {
+  GlobalKey<NavigatorState> _global(Object? k) {
     GlobalKey<NavigatorState> navKey;
 
     if (k == null) {

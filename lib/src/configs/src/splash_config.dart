@@ -10,7 +10,7 @@ class SplashConfig {
     this.foregroundColor,
     this.darkBackgroundColor,
     this.darkForegroundColor,
-    this.splashDuration = const Duration(seconds: 3),
+    this.splashDuration,
     this.customUiBuilder,
     required this.routeAfterSplash,
   });
@@ -23,7 +23,7 @@ class SplashConfig {
   final Color? foregroundColor;
   final Color? darkBackgroundColor;
   final Color? darkForegroundColor;
-  final Duration splashDuration;
+  final Duration? splashDuration;
   final SplashUIBuilder? customUiBuilder;
   final OnSplashInitCallback routeAfterSplash;
 

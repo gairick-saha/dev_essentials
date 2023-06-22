@@ -36,12 +36,12 @@ class PagePredict {
     }
 
     final DevEssentialPage? matchedRoute = isNestedRouting
-        ? Dev.nestedRouting.routingTree.matchRoute(
+        ? Dev.nestedRoutingTree.matchRoute(
             settings!.name!,
             arguments: settings!.arguments,
             initialNestedRoute: initialNestedRoute,
           )
-        : Dev.routing.routingTree.matchRoute(
+        : Dev.routingTree.matchRoute(
             settings!.name!,
             arguments: settings!.arguments,
           );

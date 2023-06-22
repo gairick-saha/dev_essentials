@@ -1,28 +1,25 @@
 part of '../navigation.dart';
 
 class DevEssentialRouting {
-  DevEssentialRouting();
+  DevEssentialRouting({
+    this.currentRoute,
+    this.previousRoute,
+    this.arguments,
+    this.route,
+    this.isBack,
+    this.isBottomSheet,
+    this.isDialog,
+  });
 
-  final DevEssentialRoutingTree routingTree = DevEssentialRoutingTree(
-    routes: [],
-  );
+  String? currentRoute;
+  String? previousRoute;
+  Object? arguments;
+  Route<dynamic>? route;
+  bool? isBack;
+  bool? isBottomSheet;
+  bool? isDialog;
 
-  void clearPages() => routingTree.clearRoutingTree();
-
-  void addPages(List<DevEssentialPage> pages) => routingTree.addRoutes(pages);
-
-  final GlobalKey<NavigatorState> rootNavigatorKey =
-      GlobalKey<NavigatorState>();
-
-  final Map<int, GlobalKey<NavigatorState>> nestedNavigatorKeys = {};
-
-  String? _currentRoute, _previousRoute;
-
-  String? get currentRoute => _currentRoute;
-
-  String? get previousRoute => _previousRoute;
-
-  void updateCurrentRoute(String? route) => _currentRoute = route;
-
-  void updatePreviousRoute(String? route) => _previousRoute = route;
+  void update(void Function(DevEssentialRouting value) fn) {
+    fn(this);
+  }
 }

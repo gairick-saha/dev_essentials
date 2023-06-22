@@ -14,4 +14,7 @@ part 'src/routing_tree.dart';
 part 'src/page_predict.dart';
 part 'src/route_transition_mixin.dart';
 part 'src/default_route.dart';
+part 'src/dialog_route.dart';
+part 'src/route_decoder.dart';
 part 'src/observer.dart';
+part 'src/bottomsheet.dart';
