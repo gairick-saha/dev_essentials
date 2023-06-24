@@ -20,9 +20,15 @@ typedef DevEssentialFormValidationMessage = ValidationMessage;
 typedef DevEssentialReactiveFormBuilder = ReactiveFormBuilder;
 typedef DevEssentialReactiveCheckBox = ReactiveCheckbox;
 typedef DevEssentialReactiveCheckboxListTile = ReactiveCheckboxListTile;
-typedef DevEssentialReactiveDropdownField<T> = ReactiveDropdownField<T>;
 
 typedef FlipAnimationChildBuilder = Widget Function(
   BuildContext context,
   AnimationController flipAnimationController,
+);
+
+typedef DevEssentialSnackbarOnTapCallback = void Function(
+    DevEssentialSnackbar snackbar);
+
+typedef DevEssentialSnackbarStatusCallback = void Function(
+  DevEssentialSnackbarStatus? status,
 );

@@ -1,8 +1,7 @@
 part of '../../widgets.dart';
 
-class DevEssentialReactiveFormDropdownTextField<T>
-    extends ReactiveFormField<T, T> {
-  DevEssentialReactiveFormDropdownTextField({
+class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
+  DevEssentialReactiveDropdownField({
     Key? key,
     String? formControlName,
     FormControl<T>? formControl,
@@ -129,8 +128,8 @@ class _DevEssentialReactiveDropdownFormTextFieldState<T>
   }
 
   void _initDropdownData() {
-    final DevEssentialReactiveFormDropdownTextField<T> currentWidget =
-        widget as DevEssentialReactiveFormDropdownTextField<T>;
+    final DevEssentialReactiveDropdownField<T> currentWidget =
+        widget as DevEssentialReactiveDropdownField<T>;
 
     effectiveValue = value;
     if (effectiveValue != null &&
