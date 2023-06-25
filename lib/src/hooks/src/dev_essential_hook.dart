@@ -105,10 +105,6 @@ class DevEssentialHookState
     routes: [],
   );
 
-  final DevEssentialRoutingTree nestedRoutingTree = DevEssentialRoutingTree(
-    routes: [],
-  );
-
   final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
 

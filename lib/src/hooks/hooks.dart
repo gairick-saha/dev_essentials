@@ -5,3 +5,4 @@ import 'package:universal_io/io.dart';
 import '../../dev_essentials.dart';
 
 part 'src/dev_essential_hook.dart';
+part 'src/nested_nav_hook.dart';

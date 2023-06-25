@@ -95,9 +95,10 @@ class DevEssentialMaterialApp extends HookWidget {
               return child ?? const SizedBox.shrink();
             },
             home: home == null && pages != null ? null : home,
-            onGenerateRoute: pages == null && home != null ? null : generator,
+            onGenerateRoute:
+                pages == null && home != null ? null : onGenerateRoute,
             onGenerateInitialRoutes:
-                pages == null && home != null ? null : initialRoutesGenerate,
+                pages == null && home != null ? null : onGenerateInitialRoutes,
           );
         },
       ),
@@ -113,13 +114,13 @@ class DevEssentialMaterialApp extends HookWidget {
     );
   }
 
-  Route<dynamic> generator(RouteSettings settings) => Dev.onGenerateRoute(
+  Route<dynamic> onGenerateRoute(RouteSettings settings) => Dev.routeGenerator(
         settings: settings,
         unknownRoute: unknownRoute,
       );
 
-  List<Route<dynamic>> initialRoutesGenerate(String name) =>
-      Dev.initialRoutesGenerate(
+  List<Route<dynamic>> onGenerateInitialRoutes(String name) =>
+      Dev.initialRouteGenerator(
         name,
         unknownRoute: unknownRoute,
       );

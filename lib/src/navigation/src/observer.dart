@@ -11,8 +11,8 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
 
   @override
   void didPop(Route route, Route? previousRoute) {
-    final _RouteDecoder currentRoute = _RouteDecoder.ofRoute(route);
-    final _RouteDecoder newRoute = _RouteDecoder.ofRoute(previousRoute);
+    final _ObserverData currentRoute = _ObserverData.fromRoute(route);
+    final _ObserverData newRoute = _ObserverData.fromRoute(previousRoute);
 
     if (currentRoute.isBottomSheet || currentRoute.isDialog) {
       Dev.print("CLOSE ${currentRoute.logText}");
@@ -43,8 +43,8 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
 
   @override
   void didPush(Route route, Route? previousRoute) {
-    final _RouteDecoder newRoute = _RouteDecoder.ofRoute(route);
-    final _RouteDecoder oldRoute = _RouteDecoder.ofRoute(previousRoute);
+    final _ObserverData newRoute = _ObserverData.fromRoute(route);
+    final _ObserverData oldRoute = _ObserverData.fromRoute(previousRoute);
 
     if (newRoute.isBottomSheet || newRoute.isDialog) {
       Dev.print(
@@ -76,7 +76,7 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
 
   @override
   void didRemove(Route route, Route? previousRoute) {
-    final _RouteDecoder currentRoute = _RouteDecoder.ofRoute(route);
+    final _ObserverData currentRoute = _ObserverData.fromRoute(route);
 
     if (currentRoute.isDevEssentialRoute) {
       Dev.print(
@@ -99,8 +99,8 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    final _RouteDecoder newRouteData = _RouteDecoder.ofRoute(newRoute);
-    final _RouteDecoder oldRouteData = _RouteDecoder.ofRoute(oldRoute);
+    final _ObserverData newRouteData = _ObserverData.fromRoute(newRoute);
+    final _ObserverData oldRouteData = _ObserverData.fromRoute(oldRoute);
 
     if (oldRouteData.isDevEssentialRoute) {
       Dev.print(

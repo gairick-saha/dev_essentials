@@ -1,7 +1,41 @@
 part of '../navigation.dart';
 
-class _RouteDecoder {
-  _RouteDecoder({
+class DevEssentialRouteDecoder {
+  const DevEssentialRouteDecoder(
+    this.treeBranch,
+    this.parameters,
+    this.arguments,
+  );
+
+  final List<DevEssentialPage> treeBranch;
+
+  DevEssentialPage? get route => treeBranch.isEmpty ? null : treeBranch.last;
+
+  String? get name => route?.name;
+
+  final Map<String, String> parameters;
+
+  final Object? arguments;
+
+  void replaceArguments(Object? arguments) {
+    final DevEssentialPage? currentRoute = route;
+    if (currentRoute != null) {
+      final int index = treeBranch.indexOf(currentRoute);
+      treeBranch[index] = currentRoute.copyWith(arguments: arguments);
+    }
+  }
+
+  void replaceParameters(Object? arguments) {
+    final DevEssentialPage? currentRoute = route;
+    if (currentRoute != null) {
+      final int index = treeBranch.indexOf(currentRoute);
+      treeBranch[index] = currentRoute.copyWith(parameters: parameters);
+    }
+  }
+}
+
+class _ObserverData {
+  _ObserverData({
     required this.name,
     required this.logText,
     required this.isDevEssentialRoute,
@@ -39,8 +73,8 @@ class _RouteDecoder {
     return null;
   }
 
-  factory _RouteDecoder.ofRoute(Route<dynamic>? route) {
-    return _RouteDecoder(
+  factory _ObserverData.fromRoute(Route<dynamic>? route) {
+    return _ObserverData(
       name: route?.settings.name,
       logText: _extractRouteName(route),
       isDevEssentialRoute: route is DevEssentialRoute,
