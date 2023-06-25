@@ -93,26 +93,25 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
               overscroll.disallowIndicator();
               return true;
             },
-            child: child != null
-                ? SingleChildScrollView(
-                    physics: physics,
-                    reverse: reverse,
-                    child: isLoading
-                        ? const Center(
-                            child: LoadingIndictor(),
-                          )
-                        : child,
+            child: isLoading
+                ? const Center(
+                    child: LoadingIndictor(),
                   )
-                : _BuildBody(
-                    childrens: slivers ?? [],
-                    onRefresh: onRefresh,
-                    scrollController: scrollController,
-                    shrinkWrap: shrinkWrap,
-                    hasAppbar: appBar == null,
-                    physics: physics,
-                    reverse: reverse,
-                    isLoading: isLoading,
-                  ),
+                : child != null
+                    ? SingleChildScrollView(
+                        physics: physics,
+                        reverse: reverse,
+                        child: child,
+                      )
+                    : _BuildBody(
+                        childrens: slivers ?? [],
+                        onRefresh: onRefresh,
+                        scrollController: scrollController,
+                        shrinkWrap: shrinkWrap,
+                        hasAppbar: appBar == null,
+                        physics: physics,
+                        reverse: reverse,
+                      ),
           ),
         ),
       ),
@@ -121,15 +120,6 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
 }
 
 class _BuildBody extends StatelessWidget {
-  final List<Widget> childrens;
-  final Future<void> Function()? onRefresh;
-  final ScrollController? scrollController;
-  final bool shrinkWrap;
-  final ScrollPhysics? physics;
-  final bool hasAppbar;
-  final bool reverse;
-  final bool isLoading;
-
   const _BuildBody({
     Key? key,
     required this.childrens,
@@ -139,44 +129,46 @@ class _BuildBody extends StatelessWidget {
     required this.hasAppbar,
     required this.physics,
     required this.reverse,
-    required this.isLoading,
   }) : super(key: key);
+
+  final List<Widget> childrens;
+  final Future<void> Function()? onRefresh;
+  final ScrollController? scrollController;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  final bool hasAppbar;
+  final bool reverse;
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(
-            child: LoadingIndictor(),
+    return onRefresh == null
+        ? CustomScrollView(
+            key: key,
+            controller: scrollController,
+            physics: physics,
+            slivers: childrens,
+            shrinkWrap: shrinkWrap,
+            reverse: reverse,
           )
-        : onRefresh == null
-            ? CustomScrollView(
-                key: key,
-                controller: scrollController,
-                physics: physics,
-                slivers: childrens,
-                shrinkWrap: shrinkWrap,
-                reverse: reverse,
-              )
-            : RefreshIndicator(
-                onRefresh: onRefresh!,
-                edgeOffset: hasAppbar
-                    ? MediaQuery.of(context).viewPadding.top +
-                        (kToolbarHeight + 10)
-                    : 0,
-                color: Theme.of(context).indicatorColor,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                displacement: 0,
-                child: CustomScrollView(
-                  key: key,
-                  controller: scrollController,
-                  physics: physics ??
-                      const AlwaysScrollableScrollPhysics(
-                        parent: ClampingScrollPhysics(),
-                      ),
-                  slivers: childrens,
-                  shrinkWrap: shrinkWrap,
-                  reverse: reverse,
-                ),
-              );
+        : RefreshIndicator(
+            onRefresh: onRefresh!,
+            edgeOffset: hasAppbar
+                ? MediaQuery.of(context).viewPadding.top + (kToolbarHeight + 10)
+                : 0,
+            color: Theme.of(context).indicatorColor,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            displacement: 0,
+            child: CustomScrollView(
+              key: key,
+              controller: scrollController,
+              physics: physics ??
+                  const AlwaysScrollableScrollPhysics(
+                    parent: ClampingScrollPhysics(),
+                  ),
+              slivers: childrens,
+              shrinkWrap: shrinkWrap,
+              reverse: reverse,
+            ),
+          );
   }
 }

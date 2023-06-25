@@ -8,10 +8,6 @@ extension NavigationExtension on DevEssential {
 
   DevEssentialRouting get routing => _hookState.routing;
 
-  // DevEssentialRoutingTree get nestedRoutingTree => _hookState.nestedRoutingTree;
-
-  // DevEssentialRouting get nestedRouting => _hookState.nestedRouting;
-
   GlobalKey<NavigatorState> get key => _hookState.rootNavigatorKey;
 
   Map<Object, GlobalKey<NavigatorState>> get nestedNavigatorKeys =>
@@ -71,12 +67,47 @@ extension NavigationExtension on DevEssential {
 
   NavigatorState? get navigator => NavigationExtension(Dev).key.currentState;
 
+  bool get isSnackbarOpen =>
+      DevEssentialSnackbarController.isSnackbarBeingShown;
+
+  void closeAllSnackbars() =>
+      DevEssentialSnackbarController.cancelAllSnackbars();
+
+  Future<void> closeCurrentSnackbar() async =>
+      await DevEssentialSnackbarController.closeCurrentSnackbar();
+
+  bool? get isDialogOpen => routing.isDialog;
+
+  bool? get isBottomSheetOpen => routing.isBottomSheet;
+
+  Route<dynamic>? get rawRoute => routing.route;
+
+  bool get isOverlaysOpen =>
+      isSnackbarOpen || isDialogOpen! || isBottomSheetOpen!;
+
+  bool get isOverlaysClosed =>
+      !isSnackbarOpen && !isDialogOpen! && !isBottomSheetOpen!;
+
   void back<T>({
     T? result,
     bool closeOverlays = false,
     bool canPop = true,
     Object? id,
   }) {
+    if (isSnackbarOpen && !closeOverlays) {
+      closeCurrentSnackbar();
+      return;
+    }
+
+    if (closeOverlays && isOverlaysOpen) {
+      if (isSnackbarOpen) {
+        closeAllSnackbars();
+      }
+      navigator?.popUntil((route) {
+        return (!isDialogOpen! && !isBottomSheetOpen!);
+      });
+    }
+
     if (canPop) {
       if (_global(id).currentState?.canPop() == true) {
         _global(id).currentState?.pop<T>(result);
@@ -84,6 +115,25 @@ extension NavigationExtension on DevEssential {
     } else {
       _global(id).currentState?.pop<T>(result);
     }
+  }
+
+  bool canGoBack({Object? id}) => _global(id).currentState?.canPop() == true;
+
+  Future<bool> handleNestedNavigationBackButton({
+    required Object? navigatorId,
+    OnAppCloseCallback? onAppCloseCallback,
+  }) async {
+    if (canGoBack(id: navigatorId)) {
+      back(id: navigatorId);
+    } else if (canGoBack()) {
+      back();
+    } else if (onAppCloseCallback != null) {
+      return await onAppCloseCallback();
+    } else {
+      return true;
+    }
+
+    return false;
   }
 
   Future<T?> to<T>(
@@ -275,8 +325,4 @@ extension NavigationExtension on DevEssential {
         routing: routing,
         isNestedRouting: isNestedRouting,
       );
-
-  Future<bool> handleNestedNavigationBackButton() async {
-    return false;
-  }
 }

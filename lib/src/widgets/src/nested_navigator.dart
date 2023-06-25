@@ -21,7 +21,6 @@ class DevNestedNavigator extends HookWidget {
       parentRoute: parentRoute,
       unknownRoute: unknownRoute,
     );
-    Dev.print(nestedNavigatorState.initialRoute);
     return Navigator(
       key: navigatorKey,
       initialRoute: nestedNavigatorState.initialRoute,

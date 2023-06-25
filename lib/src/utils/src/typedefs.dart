@@ -1,5 +1,7 @@
 part of '../utils.dart';
 
+typedef OnAppCloseCallback = Future<bool> Function();
+
 typedef SplashUIBuilder = Widget Function(
   Widget? logo,
   Color? backgroundColor,
