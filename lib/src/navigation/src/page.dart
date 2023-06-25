@@ -56,11 +56,12 @@ class DevEssentialPage extends Page {
     String replace(Match pattern) {
       final StringBuffer buffer = StringBuffer('(?:');
 
-      if (pattern[1] != null) buffer.write('\.');
+      if (pattern[1] != null) buffer.write(r'\.');
       buffer.write('([\\w%+-._~!\$&\'()*,;=:@]+))');
       if (pattern[3] != null) buffer.write('?');
 
       keys.add(pattern[2]);
+
       return "$buffer";
     }
 

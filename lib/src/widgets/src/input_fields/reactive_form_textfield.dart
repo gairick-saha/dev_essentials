@@ -78,14 +78,17 @@ class DevEssentialReactiveFormTextfield<T>
     TapRegionCallback? onTapOutside,
     bool Function(AbstractControl<dynamic>)? showErrorsCallback,
     bool showHintText = true,
+    void Function(FocusNode focusNode)? focusListener,
   })  : _textController = controller,
         _obscureText = obscureText,
+        _focusListener = focusListener,
         super(
           key: key,
           formControlName: formControlName,
           formControl: formControl,
           validationMessages: validationMessages,
           showErrors: showErrorsCallback,
+          focusNode: focusNode,
           builder: (ReactiveFormFieldState<T, String> field) {
             final _DevEssentialReactiveTextFieldState<T> state =
                 field as _DevEssentialReactiveTextFieldState<T>;
@@ -153,7 +156,12 @@ class DevEssentialReactiveFormTextfield<T>
               contextMenuBuilder: contextMenuBuilder,
               readOnly: readOnly,
               showCursor: showCursor,
-              onTapOutside: onTapOutside,
+              onTapOutside: (event) {
+                if (onTapOutside != null) {
+                  onTapOutside(event);
+                }
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               obscureText: state._obscureText,
               autocorrect: autocorrect,
               smartDashesType: smartDashesType ??
@@ -213,6 +221,8 @@ class DevEssentialReactiveFormTextfield<T>
 
   final bool? _obscureText;
 
+  final void Function(FocusNode focusNode)? _focusListener;
+
   @override
   ReactiveFormFieldState<T, String> createState() =>
       _DevEssentialReactiveTextFieldState<T>();
@@ -227,10 +237,24 @@ class _DevEssentialReactiveTextFieldState<T>
         _obscureText = !_obscureText;
       });
 
+  DevEssentialReactiveFormTextfield<T> get currentWidget =>
+      widget as DevEssentialReactiveFormTextfield<T>;
+
   @override
   void initState() {
     super.initState();
     _initializeTextController();
+    if (currentWidget._focusListener != null) {
+      focusNode.addListener(() => currentWidget._focusListener!(focusNode));
+    }
+  }
+
+  @override
+  void dispose() {
+    if (currentWidget._focusListener != null) {
+      focusNode.removeListener(() => currentWidget._focusListener!(focusNode));
+    }
+    super.dispose();
   }
 
   @override
@@ -262,7 +286,6 @@ class _DevEssentialReactiveTextFieldState<T>
 
   void _initializeTextController() {
     final initialValue = value;
-    final currentWidget = widget as DevEssentialReactiveFormTextfield<T>;
     _textController = (currentWidget._textController != null)
         ? currentWidget._textController!
         : TextEditingController();

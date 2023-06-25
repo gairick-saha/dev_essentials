@@ -83,7 +83,7 @@ class DevEssentialSnackbar extends HookWidget {
   /// Colors.grey[600].withOpacity(0.2).
   final Color? overlayColor;
 
-  final DevEssentialReactiveFormBuilder? userInputForm;
+  final DevEssentialFormBuilder? userInputForm;
   final DevEssentialSnackbarPosition position;
   final DevEssentialSnackbarStyle style;
   final DevEssentialSnackbarStatusCallback? status;

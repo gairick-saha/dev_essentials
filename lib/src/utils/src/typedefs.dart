@@ -15,13 +15,17 @@ typedef DevEssentialSvgTheme = SvgTheme;
 
 typedef DevEssentialToast = BotToast;
 
+typedef DevEssentialForm = ReactiveForm;
 typedef DevEssentialFormGroup = FormGroup;
+typedef DevEssentialAbstractFormControl<T> = AbstractControl<T>;
 typedef DevEssentialFormControl<T> = FormControl<T>;
 typedef DevEssentialFormValidators = Validators;
 typedef DevEssentialFormValidationMessage = ValidationMessage;
-typedef DevEssentialReactiveFormBuilder = ReactiveFormBuilder;
-typedef DevEssentialReactiveCheckBox = ReactiveCheckbox;
-typedef DevEssentialReactiveCheckboxListTile = ReactiveCheckboxListTile;
+typedef DevEssentialFormBuilder = ReactiveFormBuilder;
+typedef DevEssentialFormConsumerBuilder = ReactiveFormConsumerBuilder;
+typedef DevEssentialFormConsumer = ReactiveFormConsumer;
+typedef DevEssentialCheckBoxFormField = ReactiveCheckbox;
+typedef DevEssentialCheckboxListTileFormField = ReactiveCheckboxListTile;
 
 typedef FlipAnimationChildBuilder = Widget Function(
   BuildContext context,

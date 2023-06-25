@@ -37,7 +37,7 @@ extension ExtensionSnackbar on DevEssential {
     double blurValue = 0.0,
     double overlayBlurValue = 0.0,
     Color? overlayColor,
-    DevEssentialReactiveFormBuilder? userInputForm,
+    DevEssentialFormBuilder? userInputForm,
   }) {
     final DevEssentialSnackbar newSnackbar = DevEssentialSnackbar(
       status: snackbarStatus,
@@ -133,7 +133,7 @@ extension ExtensionSnackbar on DevEssential {
     double? overlayBlurValue,
     DevEssentialSnackbarStatusCallback? status,
     Color? overlayColor,
-    DevEssentialReactiveFormBuilder? userInputForm,
+    DevEssentialFormBuilder? userInputForm,
   }) {
     backgroundColor ??= Dev.theme.colorScheme.primary.withOpacity(0.4);
     blurValue ??= 7.0;

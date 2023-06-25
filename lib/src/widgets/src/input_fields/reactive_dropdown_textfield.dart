@@ -26,6 +26,10 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
     TextStyle? style,
     ReactiveFormFieldCallback<T>? onTap,
     ReactiveFormFieldCallback<T>? onChanged,
+    Widget? icon,
+    Color? iconDisabledColor,
+    Color? iconEnabledColor,
+    double iconSize = 24.0,
   })  : _items = items,
         _readOnly = readOnly,
         _disabledHint = disabledHint,
@@ -85,6 +89,10 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
                 decoration: effectiveDecoration,
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<T>(
+                    icon: icon,
+                    iconDisabledColor: iconDisabledColor,
+                    iconEnabledColor: iconEnabledColor,
+                    iconSize: iconSize,
                     focusNode: state.focusNode,
                     value: state.effectiveValue,
                     items: items,
