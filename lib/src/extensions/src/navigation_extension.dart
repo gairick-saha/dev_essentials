@@ -17,6 +17,12 @@ extension NavigationExtension on DevEssential {
 
   String? get previousRoute => routing.previousRoute;
 
+  NavigatorState? get navigator => NavigationExtension(Dev).key.currentState;
+
+  Object? get arguments => routing.arguments;
+
+  Map<String, String> get parameters => _hookState.parameters;
+
   GlobalKey<NavigatorState> nestedKey(Object key) =>
       _hookState.addNestedNavigatorKey(key);
 
@@ -64,8 +70,6 @@ extension NavigationExtension on DevEssential {
     }
     return Uri.tryParse(name)?.toString() ?? name;
   }
-
-  NavigatorState? get navigator => NavigationExtension(Dev).key.currentState;
 
   bool get isSnackbarOpen =>
       DevEssentialSnackbarController.isSnackbarBeingShown;
@@ -141,6 +145,7 @@ extension NavigationExtension on DevEssential {
     Object? id,
     String? routeName,
     dynamic arguments,
+    Map<String, String>? parameters,
   }) async {
     routeName ??= "/${page.runtimeType}";
     if (routeName == currentRoute) {
@@ -148,10 +153,9 @@ extension NavigationExtension on DevEssential {
     }
     return _global(id).currentState?.push<T>(
           DevEssentialRoute<T>(
-            settings: RouteSettings(
-              name: routeName,
-              arguments: arguments,
-            ),
+            name: routeName,
+            arguments: arguments,
+            parameters: parameters,
             pageBuilder: _resolvePage(page, 'to'),
           ),
         );
@@ -162,6 +166,7 @@ extension NavigationExtension on DevEssential {
     Object? id,
     String? routeName,
     dynamic arguments,
+    Map<String, String>? parameters,
   }) {
     routeName ??= "/${page.runtimeType.toString()}";
     routeName = _cleanRouteName(routeName);
@@ -171,10 +176,9 @@ extension NavigationExtension on DevEssential {
     return _global(id).currentState?.pushReplacement(
           DevEssentialRoute(
             pageBuilder: _resolvePage(page, 'off'),
-            settings: RouteSettings(
-              arguments: arguments,
-              name: routeName,
-            ),
+            arguments: arguments,
+            name: routeName,
+            parameters: parameters,
           ),
         );
   }
@@ -185,17 +189,18 @@ extension NavigationExtension on DevEssential {
     Object? id,
     Map<String, String>? parameters,
   }) {
+    String newRoute = routeName;
     if (routeName == currentRoute) {
       return null;
     }
 
     if (parameters != null) {
       final Uri uri = Uri(path: routeName, queryParameters: parameters);
-      routeName = uri.toString();
+      newRoute = uri.toString();
     }
 
     return _global(id).currentState?.pushNamed<T>(
-          routeName,
+          newRoute,
           arguments: arguments,
         );
   }
@@ -254,9 +259,9 @@ extension NavigationExtension on DevEssential {
   Future<T?>? offAndToNamed<T>(
     String routeName, {
     dynamic arguments,
+    Map<String, String>? parameters,
     Object? id,
     Object? result,
-    Map<String, String>? parameters,
   }) {
     if (routeName == currentRoute) {
       return null;
@@ -278,9 +283,9 @@ extension NavigationExtension on DevEssential {
 
   Future<T?>? offAllNamed<T>(
     String newRouteName, {
+    Object? id,
     RoutePredicate? predicate,
     Object? arguments,
-    Object? id,
     Map<String, String>? parameters,
   }) {
     if (newRouteName == currentRoute) {

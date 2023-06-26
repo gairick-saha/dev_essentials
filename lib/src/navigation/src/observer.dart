@@ -32,6 +32,7 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
       }
 
       value.arguments = newRoute.arguments;
+      value.arguments = newRoute.arguments;
       value.route = newRoute.route;
       value.isBack = true;
       value.isBottomSheet = newRoute.isBottomSheet;
@@ -71,6 +72,7 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
           newRoute.isBottomSheet ? true : (value.isBottomSheet ?? false);
       value.isDialog = newRoute.isDialog ? true : (value.isDialog ?? false);
     });
+
     super.didPush(route, previousRoute);
   }
 

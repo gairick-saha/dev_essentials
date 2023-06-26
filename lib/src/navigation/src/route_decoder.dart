@@ -24,14 +24,6 @@ class DevEssentialRouteDecoder {
       treeBranch[index] = currentRoute.copyWith(arguments: arguments);
     }
   }
-
-  void replaceParameters(Object? arguments) {
-    final DevEssentialPage? currentRoute = route;
-    if (currentRoute != null) {
-      final int index = treeBranch.indexOf(currentRoute);
-      treeBranch[index] = currentRoute.copyWith(parameters: parameters);
-    }
-  }
 }
 
 class _ObserverData {
@@ -42,6 +34,7 @@ class _ObserverData {
     required this.isBottomSheet,
     required this.isDialog,
     required this.arguments,
+    required this.parameters,
     required this.route,
   });
 
@@ -51,13 +44,10 @@ class _ObserverData {
   final String? name;
   final String? logText;
   final Object? arguments;
+  final Map<String, String>? parameters;
   final Route<dynamic>? route;
 
   static String? _extractRouteName(Route? route) {
-    if (route?.settings.name != null) {
-      return route!.settings.name;
-    }
-
     if (route is DevEssentialRoute) {
       return route.routeName;
     }
@@ -70,10 +60,17 @@ class _ObserverData {
       return 'BOTTOMSHEET ${route.hashCode}';
     }
 
+    if (route?.settings.name != null) {
+      return route!.settings.name;
+    }
+
     return null;
   }
 
-  factory _ObserverData.fromRoute(Route<dynamic>? route) {
+  factory _ObserverData.fromRoute(
+    Route<dynamic>? route, {
+    Map<String, String>? parameters,
+  }) {
     return _ObserverData(
       name: route?.settings.name,
       logText: _extractRouteName(route),
@@ -81,6 +78,7 @@ class _ObserverData {
       isDialog: route is DevEssentialDialogRoute,
       isBottomSheet: route is DevEssentialModalBottomSheetRoute,
       arguments: route?.settings.arguments,
+      parameters: route is DevEssentialRoute ? route.parameters : null,
       route: route,
     );
   }

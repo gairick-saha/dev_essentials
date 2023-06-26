@@ -143,6 +143,7 @@ class _BuildBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return onRefresh == null
         ? CustomScrollView(
+            scrollBehavior: const DevEssentialCustomScrollBehavior(),
             key: key,
             controller: scrollController,
             physics: physics,
@@ -159,6 +160,7 @@ class _BuildBody extends StatelessWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             displacement: 0,
             child: CustomScrollView(
+              scrollBehavior: const DevEssentialCustomScrollBehavior(),
               key: key,
               controller: scrollController,
               physics: physics ??

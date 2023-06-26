@@ -17,13 +17,10 @@ class PagePredict {
     _checkRoute();
     final DevEssentialPage page = (isUnknown ? unknownRoute : route)!;
     return DevEssentialRoute<T>(
-      settings: isUnknown
-          ? RouteSettings(
-              name: page.name,
-              arguments: settings!.arguments,
-            )
-          : settings,
-      pageBuilder: page.builder,
+      name: isUnknown ? settings!.name! : page.name!,
+      arguments: isUnknown ? settings!.name! : page.arguments,
+      parameters: Dev.routingTree._parseParams(page.name!, page.path),
+      pageBuilder: (context) => page.builder(context, settings!.arguments),
     );
   }
 
@@ -32,13 +29,10 @@ class PagePredict {
     final DevEssentialPage page = (isUnknown ? unknownRoute : route)!;
     return [
       DevEssentialRoute<T>(
-        settings: isUnknown
-            ? RouteSettings(
-                name: page.name,
-                arguments: settings!.arguments,
-              )
-            : settings,
-        pageBuilder: page.builder,
+        name: isUnknown ? settings!.name! : page.name!,
+        arguments: isUnknown ? settings!.name! : page.arguments,
+        parameters: Dev.routingTree._parseParams(page.name!, page.path),
+        pageBuilder: (context) => page.builder(context, settings!.arguments),
       ),
     ];
   }
@@ -52,11 +46,14 @@ class PagePredict {
       settings!.name!,
       arguments: settings!.arguments,
     );
+    DevEssentialHookState.instance.parameters = matchedRoute.parameters;
 
     if (matchedRoute.route == null) {
       isUnknown = true;
       return;
     }
+
+    addPageParameter(matchedRoute.route!);
 
     settings = RouteSettings(
       name: matchedRoute.name,
@@ -64,5 +61,14 @@ class PagePredict {
     );
     route = matchedRoute.route;
     return;
+  }
+
+  void addPageParameter(DevEssentialPage route) {
+    if (route.parameters == null) return;
+
+    final Map<String, String>? parameters =
+        DevEssentialHookState.instance.parameters;
+    parameters!.addEntries(route.parameters!.entries);
+    DevEssentialHookState.instance.parameters = parameters;
   }
 }

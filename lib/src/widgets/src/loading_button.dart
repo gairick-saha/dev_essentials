@@ -8,6 +8,7 @@ class DevEssentialLoadingButton extends HookWidget {
     required this.buttonText,
     required this.onPressed,
     this.color,
+    this.borderColor,
     this.textColor,
     this.width,
     this.height,
@@ -27,6 +28,7 @@ class DevEssentialLoadingButton extends HookWidget {
     required this.child,
     required this.onPressed,
     this.color,
+    this.borderColor,
     this.width,
     this.height,
     this.radius = 8,
@@ -45,6 +47,7 @@ class DevEssentialLoadingButton extends HookWidget {
   final Widget? child;
   final Future<void> Function() onPressed;
   final Color? color;
+  final Color? borderColor;
   final Color? textColor;
   final double? width;
   final double? height;
@@ -60,16 +63,18 @@ class DevEssentialLoadingButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final Color defaultButtonColor = color ?? Dev.theme.colorScheme.primary;
+    final Color? defaultTextColor = textColor;
     final ValueNotifier<Color> buttonColor =
         useState<Color>(defaultButtonColor);
+
     return LoadingButton(
       defaultWidget: child ??
           Text(
             buttonText!,
             textScaleFactor: Dev.textScaleFactor,
-            style: buttonTextstyle?.copyWith(color: textColor),
+            style: buttonTextstyle?.copyWith(color: defaultTextColor),
           ),
-      loadingWidget: loadingWidget ?? LoadingIndictor(color: textColor),
+      loadingWidget: loadingWidget ?? LoadingIndictor(color: defaultTextColor),
       color: buttonColor.value,
       borderRadius: radius,
       height: height ?? kMinInteractiveDimension,
@@ -85,7 +90,9 @@ class DevEssentialLoadingButton extends HookWidget {
       },
       animate: animate,
       type: type,
-      borderSide: borderSide,
+      borderSide: borderSide.copyWith(
+        color: borderColor ?? defaultButtonColor,
+      ),
       padding: padding,
       textcolor: textColor,
     );

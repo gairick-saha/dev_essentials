@@ -2,7 +2,9 @@ part of '../navigation.dart';
 
 class DevEssentialRoute<T> extends PageRoute<T> with _RouteTransitionMixin<T> {
   DevEssentialRoute({
-    RouteSettings? settings,
+    required this.name,
+    this.arguments,
+    this.parameters,
     this.pageBuilder,
     this.maintainState = true,
     this.barrierColor,
@@ -18,18 +20,26 @@ class DevEssentialRoute<T> extends PageRoute<T> with _RouteTransitionMixin<T> {
     bool fullscreenDialog = false,
     bool allowSnapshotting = true,
   }) : super(
-          settings: settings,
+          settings: RouteSettings(
+            name: name,
+            arguments: arguments,
+          ),
           fullscreenDialog: fullscreenDialog,
           allowSnapshotting: allowSnapshotting,
         );
 
   final WidgetBuilder? pageBuilder;
 
+  final String name;
+  final Object? arguments;
+  final Map<String, String>? parameters;
+
   @override
   final bool showCupertinoParallax;
 
   @override
   final bool opaque;
+
   final bool? popGesture;
 
   @override

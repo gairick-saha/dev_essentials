@@ -8,6 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../hooks/hooks.dart';
+
 part 'src/page.dart';
 part 'src/routing.dart';
 part 'src/routing_tree.dart';

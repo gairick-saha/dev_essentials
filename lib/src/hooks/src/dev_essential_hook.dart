@@ -99,7 +99,8 @@ class DevEssentialHookState
   DevEssentialCustomTransition? customTransition;
 
   final DevEssentialRouting routing = DevEssentialRouting();
-  final DevEssentialRouting nestedRouting = DevEssentialRouting();
+
+  Map<String, String> parameters = {};
 
   final DevEssentialRoutingTree routingTree = DevEssentialRoutingTree(
     routes: [],

@@ -92,11 +92,12 @@ class DevEssentialRoutingTree {
       final List<DevEssentialPage> mappedTreeBranch = treeBranch
           .map(
             (e) => e.value.copyWith(
+              name: uri.toString(),
+              arguments: arguments ?? e.value.arguments,
               parameters: {
                 if (e.value.parameters != null) ...e.value.parameters!,
                 ...params,
               },
-              name: e.key,
             ),
           )
           .toList();

@@ -1,5 +1,8 @@
 part of '../navigation.dart';
 
+typedef DevEssentialPageBuilder = Widget Function(
+    BuildContext context, Object? arguments);
+
 class DevEssentialPage extends Page {
   DevEssentialPage({
     LocalKey? key,
@@ -12,14 +15,14 @@ class DevEssentialPage extends Page {
         assert(name.startsWith('/'),
             'It is necessary to start route name [$name] with a slash: /$name'),
         super(
-          key: key,
+          key: key ?? ValueKey(name),
           name: name,
           arguments: arguments,
         );
 
   final PathDecoded path;
 
-  final WidgetBuilder builder;
+  final DevEssentialPageBuilder builder;
 
   final List<DevEssentialPage> childrens;
 
@@ -27,8 +30,10 @@ class DevEssentialPage extends Page {
 
   @override
   DevEssentialRoute createRoute(BuildContext context) => DevEssentialRoute(
-        settings: this,
-        pageBuilder: builder,
+        name: name!,
+        arguments: arguments,
+        parameters: parameters,
+        pageBuilder: (context) => builder(context, arguments),
       );
 
   @override
@@ -38,9 +43,9 @@ class DevEssentialPage extends Page {
   DevEssentialPage copyWith({
     String? name,
     Object? arguments,
-    WidgetBuilder? builder,
-    List<DevEssentialPage>? childrens,
     Map<String, String>? parameters,
+    DevEssentialPageBuilder? builder,
+    List<DevEssentialPage>? childrens,
   }) =>
       DevEssentialPage(
         name: (name ?? this.name)!,

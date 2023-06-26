@@ -3,7 +3,7 @@ part of '../routes.dart';
 class DevEssentialPages {
   static DevEssentialPage defaultUnknownRoute = DevEssentialPage(
     name: '/404NotFound',
-    builder: (context) => const Scaffold(
+    builder: (context, arguments) => const Scaffold(
       body: Center(
         child: Text("Page not found."),
       ),
@@ -18,7 +18,7 @@ class DevEssentialPages {
       if (splashConfig != null)
         DevEssentialPage(
           name: _DevEssentialPaths.root,
-          builder: (context) => BlocProvider<SplashCubit>(
+          builder: (context, arguments) => BlocProvider<SplashCubit>(
             create: (context) {
               SplashCubit cubit = SplashCubit(splashConfig: splashConfig);
               cubit.initSplash();
