@@ -23,3 +23,4 @@ part 'src/timeline_listview/timeline_listview.dart';
 part 'src/nested_navigator.dart';
 part 'src/input_fields/reactive_form_textfield.dart';
 part 'src/input_fields/reactive_dropdown_textfield.dart';
+part 'src/pageview/dev_essential_pageview.dart';

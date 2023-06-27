@@ -33,7 +33,7 @@ class FlipAnimationWrapper extends HookWidget {
       ),
       child: IndexedStack(
         index: flipAnimationHookState.isFront ? 0 : 1,
-        alignment: Alignment.center,
+        alignment: AlignmentDirectional.topStart,
         children: [
           firstChild,
           Transform(
