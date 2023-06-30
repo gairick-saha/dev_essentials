@@ -53,11 +53,11 @@ class _ObserverData {
     }
 
     if (route is DevEssentialDialogRoute) {
-      return 'DIALOG ${route.hashCode}';
+      return 'DIALOG ${route.settings.name ?? route.hashCode}';
     }
 
     if (route is DevEssentialModalBottomSheetRoute) {
-      return 'BOTTOMSHEET ${route.hashCode}';
+      return 'BOTTOMSHEET ${route.settings.name ?? route.hashCode}';
     }
 
     if (route?.settings.name != null) {

@@ -244,16 +244,13 @@ class _DevEssentialReactiveTextFieldState<T>
   void initState() {
     super.initState();
     _initializeTextController();
-    if (currentWidget._focusListener != null) {
-      focusNode.addListener(() => currentWidget._focusListener!(focusNode));
-    }
+    focusNode.addListener(() => currentWidget._focusListener?.call(focusNode));
   }
 
   @override
   void dispose() {
-    if (currentWidget._focusListener != null) {
-      focusNode.removeListener(() => currentWidget._focusListener!(focusNode));
-    }
+    focusNode
+        .removeListener(() => currentWidget._focusListener?.call(focusNode));
     super.dispose();
   }
 

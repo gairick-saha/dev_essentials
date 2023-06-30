@@ -68,9 +68,8 @@ class DevEssentialNavigationObserver extends NavigatorObserver {
       value.arguments = newRoute.arguments;
       value.route = newRoute.route;
       value.isBack = false;
-      value.isBottomSheet =
-          newRoute.isBottomSheet ? true : (value.isBottomSheet ?? false);
-      value.isDialog = newRoute.isDialog ? true : (value.isDialog ?? false);
+      value.isBottomSheet = newRoute.isBottomSheet ? true : value.isBottomSheet;
+      value.isDialog = newRoute.isDialog ? true : value.isDialog;
     });
 
     super.didPush(route, previousRoute);

@@ -22,7 +22,7 @@ class FlipAnimationWrapper extends HookWidget {
       controller: controller,
       flipDuration: flipDuration,
     );
-    var child = AnimatedBuilder(
+    return AnimatedBuilder(
       animation: flipAnimationHookState.flipAnimationController,
       builder: (context, child) => Transform(
         transform: _buildAnimatedMatrix4(
@@ -33,18 +33,17 @@ class FlipAnimationWrapper extends HookWidget {
       ),
       child: IndexedStack(
         index: flipAnimationHookState.isFront ? 0 : 1,
-        alignment: AlignmentDirectional.topStart,
+        alignment: AlignmentDirectional.center,
         children: [
           firstChild,
           Transform(
             transform: _buildSecondChildMatrix4(),
-            alignment: Alignment.center,
+            alignment: AlignmentDirectional.center,
             child: secondChild,
           ),
         ],
       ),
     );
-    return child;
   }
 
   Matrix4 _buildAnimatedMatrix4(double value) {

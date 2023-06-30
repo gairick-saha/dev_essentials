@@ -7,8 +7,8 @@ class DevEssentialRouting {
     this.arguments,
     this.route,
     this.isBack,
-    this.isBottomSheet,
-    this.isDialog,
+    this.isBottomSheet = false,
+    this.isDialog = false,
   });
 
   String? currentRoute;
@@ -16,8 +16,8 @@ class DevEssentialRouting {
   Object? arguments;
   Route<dynamic>? route;
   bool? isBack;
-  bool? isBottomSheet;
-  bool? isDialog;
+  bool isBottomSheet;
+  bool isDialog;
 
   void update(void Function(DevEssentialRouting value) fn) {
     fn(this);

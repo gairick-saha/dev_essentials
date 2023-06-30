@@ -10,7 +10,7 @@ extension DialogExtension on DevEssential {
     bool barrierDismissible = true,
     Color? barrierColor,
     bool useSafeArea = true,
-    GlobalKey<NavigatorState>? navigatorKey,
+    Object? navigatorKey,
     Object? arguments,
     Duration? transitionDuration,
     Curve? transitionCurve,
@@ -61,25 +61,25 @@ extension DialogExtension on DevEssential {
     Color barrierColor = const Color(0x80000000),
     Duration transitionDuration = const Duration(milliseconds: 200),
     RouteTransitionsBuilder? transitionBuilder,
-    GlobalKey<NavigatorState>? navigatorKey,
+    Object? navigatorKey,
     RouteSettings? routeSettings,
   }) {
     assert(!barrierDismissible || barrierLabel != null);
-    final nav = navigatorKey?.currentState ??
-        Navigator.of(overlayContext!,
-            rootNavigator:
-                true); //overlay context will always return the root navigator
-    return nav.push<T>(
-      DevEssentialDialogRoute<T>(
-        pageBuilder: pageBuilder,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        barrierColor: barrierColor,
-        transitionDuration: transitionDuration,
-        transitionBuilder: transitionBuilder,
-        settings: routeSettings,
-      ),
-    );
+    // final nav = _global(navigatorKey).currentState!.of(
+    //       overlayContext!,
+    //       rootNavigator: true,
+    //     ); //overlay context will always return the root navigator
+    return _global(navigatorKey).currentState!.push<T>(
+          DevEssentialDialogRoute<T>(
+            pageBuilder: pageBuilder,
+            barrierDismissible: barrierDismissible,
+            barrierLabel: barrierLabel,
+            barrierColor: barrierColor,
+            transitionDuration: transitionDuration,
+            transitionBuilder: transitionBuilder,
+            settings: routeSettings,
+          ),
+        );
   }
 
   /// Custom UI Dialog.
@@ -113,7 +113,7 @@ extension DialogExtension on DevEssential {
     WillPopCallback? onWillPop,
 
     // the navigator used to push the dialog
-    GlobalKey<NavigatorState>? navigatorKey,
+    Object? navigatorKey,
   }) {
     var leanCancel = onCancel != null || textCancel != null;
     var leanConfirm = onConfirm != null || textConfirm != null;

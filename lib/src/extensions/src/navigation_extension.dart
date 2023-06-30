@@ -80,17 +80,17 @@ extension NavigationExtension on DevEssential {
   Future<void> closeCurrentSnackbar() async =>
       await DevEssentialSnackbarController.closeCurrentSnackbar();
 
-  bool? get isDialogOpen => routing.isDialog;
+  bool get isDialogOpen => routing.isDialog;
 
-  bool? get isBottomSheetOpen => routing.isBottomSheet;
+  bool get isBottomSheetOpen => routing.isBottomSheet;
 
   Route<dynamic>? get rawRoute => routing.route;
 
   bool get isOverlaysOpen =>
-      isSnackbarOpen || isDialogOpen! || isBottomSheetOpen!;
+      isSnackbarOpen || isDialogOpen || isBottomSheetOpen;
 
   bool get isOverlaysClosed =>
-      !isSnackbarOpen && !isDialogOpen! && !isBottomSheetOpen!;
+      !isSnackbarOpen && !isDialogOpen && !isBottomSheetOpen;
 
   void back<T>({
     T? result,
@@ -108,7 +108,7 @@ extension NavigationExtension on DevEssential {
         closeAllSnackbars();
       }
       navigator?.popUntil((route) {
-        return (!isDialogOpen! && !isBottomSheetOpen!);
+        return (!isDialogOpen && !isBottomSheetOpen);
       });
     }
 
