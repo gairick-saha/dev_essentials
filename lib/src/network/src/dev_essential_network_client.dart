@@ -2,34 +2,29 @@ part of '../network.dart';
 
 class DevEssentialNetworkClient {
   DevEssentialNetworkClient({
-    String? baseUrl,
-    String? authToken,
-    Duration? defaultConnectTimeout,
-    Duration? defaultReceiveTimeout,
-  }) {
-    _baseUrl = _baseUrl;
-    _authToken = _authToken;
-    _kDefaultConnectTimeout = defaultConnectTimeout ?? 100000.milliseconds;
-    _kDefaultReceiveTimeout = defaultReceiveTimeout ?? 100000.milliseconds;
-  }
+    this.baseUrl,
+    this.authToken,
+    this.defaultConnectTimeout = const Duration(milliseconds: 100000),
+    this.defaultReceiveTimeout = const Duration(milliseconds: 100000),
+  });
 
-  String? _baseUrl;
-  String? _authToken;
-  late Duration _kDefaultConnectTimeout;
-  late Duration _kDefaultReceiveTimeout;
+  final String? baseUrl;
+  final String? authToken;
+  final Duration defaultConnectTimeout;
+  final Duration defaultReceiveTimeout;
 
   Dio get _client {
     final Dio dio = Dio();
-    if (_baseUrl != null) {
+    if (baseUrl != null) {
       dio
         ..options = BaseOptions(
-          baseUrl: _baseUrl!,
-          connectTimeout: _kDefaultConnectTimeout,
-          receiveTimeout: _kDefaultReceiveTimeout,
+          baseUrl: baseUrl!,
+          connectTimeout: defaultConnectTimeout,
+          receiveTimeout: defaultReceiveTimeout,
           responseType: ResponseType.json,
         )
         ..httpClientAdapter
-        ..interceptors.addAll([_LoggingInterceptor(_authToken)]);
+        ..interceptors.addAll([_LoggingInterceptor(authToken)]);
     }
     return dio;
   }

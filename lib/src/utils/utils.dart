@@ -10,6 +10,7 @@ import 'package:path/path.dart' as path_helper;
 import 'package:path_provider/path_provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:flutter/gestures.dart';
+import 'package:reactive_pin_code_fields/reactive_pin_code_fields.dart';
 
 import '../snackbar/dev_snackbar.dart';
 

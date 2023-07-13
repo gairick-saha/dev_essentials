@@ -119,7 +119,6 @@ class TimelineListView extends StatelessWidget {
     Widget? legend;
     TextPainter? legendTextPainter;
     TextSpan? legendTextSpan;
-    ;
 
     if (legendText != null) {
       legendTextSpan = TextSpan(

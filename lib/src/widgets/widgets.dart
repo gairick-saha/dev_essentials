@@ -16,7 +16,9 @@ import '../hooks/hooks.dart';
 
 part 'src/loading_indicator.dart';
 part 'src/loading_button.dart';
-part 'src/scrollable_scaffold_wrapper.dart';
+part 'src/scaffolds/scaffold_body.dart';
+part 'src/scaffolds/scrollable_scaffold_wrapper.dart';
+part 'src/scaffolds/tabbed_scrollable_scaffold_wrapper.dart';
 part 'src/timeline_listview/timeline_list_item.dart';
 part 'src/timeline_listview/timeline_painter.dart';
 part 'src/timeline_listview/timeline_listview.dart';

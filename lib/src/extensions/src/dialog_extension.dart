@@ -159,8 +159,8 @@ extension DialogExtension on DevEssential {
             ),
             child: Text(
               textConfirm ?? "Ok",
-              style:
-                  TextStyle(color: confirmTextColor ?? theme.backgroundColor),
+              style: TextStyle(
+                  color: confirmTextColor ?? theme.colorScheme.background),
             ),
             onPressed: () {
               onConfirm?.call();

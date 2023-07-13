@@ -66,9 +66,9 @@ class PagePredict {
   void addPageParameter(DevEssentialPage route) {
     if (route.parameters == null) return;
 
-    final Map<String, String>? parameters =
+    final Map<String, String> parameters =
         DevEssentialHookState.instance.parameters;
-    parameters!.addEntries(route.parameters!.entries);
+    parameters.addEntries(route.parameters!.entries);
     DevEssentialHookState.instance.parameters = parameters;
   }
 }

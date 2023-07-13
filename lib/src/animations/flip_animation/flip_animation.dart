@@ -28,7 +28,7 @@ class FlipAnimationWrapper extends HookWidget {
         transform: _buildAnimatedMatrix4(
           flipAnimationHookState.flipAnimationController.value,
         ),
-        alignment: Alignment.center,
+        alignment: AlignmentDirectional.center,
         child: child,
       ),
       child: IndexedStack(

@@ -24,6 +24,9 @@ typedef DevEssentialFormValidationMessage = ValidationMessage;
 typedef DevEssentialFormBuilder = ReactiveFormBuilder;
 typedef DevEssentialFormConsumerBuilder = ReactiveFormConsumerBuilder;
 typedef DevEssentialFormConsumer = ReactiveFormConsumer;
+typedef DevEssentialPinCodeFormField = ReactivePinCodeTextField;
+typedef DevEssentialPinTheme = PinTheme;
+typedef DevEssentialPinCodeFieldShape = PinCodeFieldShape;
 typedef DevEssentialCheckBoxFormField = ReactiveCheckbox;
 typedef DevEssentialCheckboxListTileFormField = ReactiveCheckboxListTile;
 

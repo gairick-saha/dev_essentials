@@ -68,9 +68,8 @@ class _ObserverData {
   }
 
   factory _ObserverData.fromRoute(
-    Route<dynamic>? route, {
-    Map<String, String>? parameters,
-  }) {
+    Route<dynamic>? route,
+  ) {
     return _ObserverData(
       name: route?.settings.name,
       logText: _extractRouteName(route),

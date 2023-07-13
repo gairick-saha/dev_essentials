@@ -49,9 +49,9 @@ extension NavigationExtension on DevEssential {
     if (page is WidgetBuilder) {
       return page;
     } else if (page is Widget) {
-      Dev.print(
-        'WARNING, consider using: "Dev.$method(() => Page())" instead of "Dev.$method(Page())". Using a widget function instead of a widget fully guarantees that the widget and its controllers will be removed from memory when they are no longer used.',
-      );
+      // Dev.print(
+      //   'WARNING, consider using: "Dev.$method(() => Page())" instead of "Dev.$method(Page())". Using a widget function instead of a widget fully guarantees that the widget and its controllers will be removed from memory when they are no longer used.',
+      // );
       return (BuildContext context) => page;
     } else if (page is String) {
       throw 'Unexpected String, use toNamed() instead';
@@ -146,6 +146,9 @@ extension NavigationExtension on DevEssential {
     String? routeName,
     dynamic arguments,
     Map<String, String>? parameters,
+    DevEssentialTransition? transition,
+    Curve? curve,
+    DevEssentialCustomTransition? customTransition,
   }) async {
     routeName ??= "/${page.runtimeType}";
     if (routeName == currentRoute) {
@@ -157,6 +160,9 @@ extension NavigationExtension on DevEssential {
             arguments: arguments,
             parameters: parameters,
             pageBuilder: _resolvePage(page, 'to'),
+            transition: transition,
+            curve: curve,
+            customTransition: customTransition,
           ),
         );
   }
