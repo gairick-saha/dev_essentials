@@ -5,8 +5,7 @@ class _LoggingInterceptor extends Interceptor {
   _LoggingInterceptor(this.authToken);
 
   @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     if (authToken != null) {
       options.headers = {
         'Content-type': 'application/json',
@@ -48,8 +47,7 @@ class _LoggingInterceptor extends Interceptor {
         break;
       case DioExceptionType.badResponse:
         if (kDebugMode) {
-          Dev.print(
-              'From OnError interceptor method: ${err.requestOptions.method}');
+          Dev.print('From OnError interceptor method: ${err.requestOptions.method}');
           Dev.print('From OnError interceptor url: ${err.requestOptions.uri}');
           Dev.print('From OnError interceptor: ${err.error}');
           Dev.print('From OnError interceptor: ${err.response}');

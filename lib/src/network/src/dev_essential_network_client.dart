@@ -29,7 +29,7 @@ class DevEssentialNetworkClient {
     return dio;
   }
 
-  Future<Map<String, dynamic>> get({
+  Future<DevEssentialNetworkDataRespone> get({
     required String url,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -45,14 +45,14 @@ class DevEssentialNetworkClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Map<String, dynamic> responseData = {};
+      DevEssentialNetworkDataRespone responseData =
+          DevEssentialNetworkDataRespone.empty();
 
-      if (response.data is List || response.data is String) {
-        responseData = {
-          'data': response.data,
-        };
-      } else {
-        responseData = response.data ?? {};
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        responseData.isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.data = response.data;
       }
 
       return responseData;
@@ -63,7 +63,7 @@ class DevEssentialNetworkClient {
     }
   }
 
-  Future<Map<String, dynamic>> post({
+  Future<DevEssentialNetworkDataRespone> post({
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
@@ -83,14 +83,14 @@ class DevEssentialNetworkClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Map<String, dynamic> responseData = {};
+      DevEssentialNetworkDataRespone responseData =
+          DevEssentialNetworkDataRespone.empty();
 
-      if (response.data is List || response.data is String) {
-        responseData = {
-          'data': response.data,
-        };
-      } else {
-        responseData = response.data ?? {};
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        responseData.isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.data = response.data;
       }
 
       return responseData;
@@ -101,7 +101,7 @@ class DevEssentialNetworkClient {
     }
   }
 
-  Future<Map<String, dynamic>> put({
+  Future<DevEssentialNetworkDataRespone> put({
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
@@ -121,14 +121,14 @@ class DevEssentialNetworkClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Map<String, dynamic> responseData = {};
+      DevEssentialNetworkDataRespone responseData =
+          DevEssentialNetworkDataRespone.empty();
 
-      if (response.data is List || response.data is String) {
-        responseData = {
-          'data': response.data,
-        };
-      } else {
-        responseData = response.data ?? {};
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        responseData.isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.data = response.data;
       }
 
       return responseData;
@@ -139,7 +139,7 @@ class DevEssentialNetworkClient {
     }
   }
 
-  Future<Map<String, dynamic>> delete({
+  Future<DevEssentialNetworkDataRespone> delete({
     required String url,
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -155,14 +155,14 @@ class DevEssentialNetworkClient {
         cancelToken: cancelToken,
       );
 
-      Map<String, dynamic> responseData = {};
+      DevEssentialNetworkDataRespone responseData =
+          DevEssentialNetworkDataRespone.empty();
 
-      if (response.data is List || response.data is String) {
-        responseData = {
-          'data': response.data,
-        };
-      } else {
-        responseData = response.data ?? {};
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        responseData.isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.data = response.data;
       }
 
       return responseData;
@@ -173,7 +173,7 @@ class DevEssentialNetworkClient {
     }
   }
 
-  Future<Map<String, dynamic>> multipartPost({
+  Future<DevEssentialNetworkDataRespone> multipartPost({
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
@@ -193,14 +193,14 @@ class DevEssentialNetworkClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Map<String, dynamic> responseData = {};
+      DevEssentialNetworkDataRespone responseData =
+          DevEssentialNetworkDataRespone.empty();
 
-      if (response.data is List || response.data is String) {
-        responseData = {
-          'data': response.data,
-        };
-      } else {
-        responseData = response.data ?? {};
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        responseData.isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.data = response.data;
       }
 
       return responseData;
@@ -211,7 +211,7 @@ class DevEssentialNetworkClient {
     }
   }
 
-  Future<Map<String, dynamic>> multipartPut({
+  Future<DevEssentialNetworkDataRespone> multipartPut({
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
@@ -231,14 +231,14 @@ class DevEssentialNetworkClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Map<String, dynamic> responseData = {};
+      DevEssentialNetworkDataRespone responseData =
+          DevEssentialNetworkDataRespone.empty();
 
-      if (response.data is List || response.data is String) {
-        responseData = {
-          'data': response.data,
-        };
-      } else {
-        responseData = response.data ?? {};
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        responseData.isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.data = response.data;
       }
 
       return responseData;
