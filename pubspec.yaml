@@ -30,6 +30,7 @@ dependencies:
   sliver_tools: ^0.2.10
   reactive_forms: ^15.0.0
   reactive_pin_code_fields: ^1.0.0
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

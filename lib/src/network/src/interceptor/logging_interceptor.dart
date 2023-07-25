@@ -1,34 +1,57 @@
 part of '../../network.dart';
 
 class _LoggingInterceptor extends Interceptor {
-  final String? authToken;
-  _LoggingInterceptor(this.authToken);
+  _LoggingInterceptor({
+    this.tokenInstance,
+    this.onTokenExpired,
+  });
+
+  final DevEssentialNetworkToken? tokenInstance;
+  final OnTokenExpiredCallback? onTokenExpired;
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    if (authToken != null) {
-      options.headers = {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer ${authToken!}',
-      };
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    if (tokenInstance != null) {
+      if (tokenInstance!.isAccessTokenExpired && onTokenExpired != null) {
+        Dev.print('Expired token refreshing...');
+        options.headers = {
+          ...options.headers,
+          'Content-type': 'application/json',
+          'Authorization':
+              (await onTokenExpired?.call(tokenInstance!))?.token ??
+                  tokenInstance!.token,
+        };
+      } else {
+        options.headers = {
+          ...options.headers,
+          'Content-type': 'application/json',
+          'Authorization': tokenInstance!.token,
+        };
+      }
     } else {
       options.headers = {
+        ...options.headers,
         'Content-type': 'application/json',
       };
     }
 
     if (kDebugMode) {
+      Dev.print('Method => ${(options.method).toString()}');
+      Dev.print('URL => ${options.uri}');
+      Dev.print('Headers => ${options.headers}');
+
       if (options.data != null) {
         if (options.data.runtimeType == FormData) {
-          Dev.print('${options.data.fields}');
-          Dev.print('${options.data.files}');
+          Dev.print(
+              'FormData fields => ${jsonEncode(options.data.fields).toString()}');
+          Dev.print('FormData files => ${options.data.files}');
         } else {
-          Dev.print(jsonEncode(options.data).toString());
+          Dev.print('Data => ${jsonEncode(options.data).toString()}');
         }
       }
-      Dev.print('${options.headers}');
-      Dev.print((options.method).toString());
-      Dev.print('${options.uri}');
     }
 
     return handler.next(options);
@@ -47,10 +70,15 @@ class _LoggingInterceptor extends Interceptor {
         break;
       case DioExceptionType.badResponse:
         if (kDebugMode) {
-          Dev.print('From OnError interceptor method: ${err.requestOptions.method}');
-          Dev.print('From OnError interceptor url: ${err.requestOptions.uri}');
-          Dev.print('From OnError interceptor: ${err.error}');
-          Dev.print('From OnError interceptor: ${err.response}');
+          Dev.print(
+              'From OnError interceptor headers => ${err.requestOptions.headers}');
+          Dev.print(
+              'From OnError interceptor method => ${err.requestOptions.method}');
+          Dev.print(
+              'From OnError interceptor url => ${err.requestOptions.uri}');
+          Dev.print('From OnError interceptor error => ${err.error}');
+          Dev.print(
+              'From OnError interceptor error response => ${err.response}');
         }
         return handler.resolve(err.response!);
       case DioExceptionType.badCertificate:

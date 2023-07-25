@@ -1,15 +1,21 @@
 part of '../network.dart';
 
+typedef OnTokenExpiredCallback = Future<DevEssentialNetworkToken?> Function(
+  DevEssentialNetworkToken oldTokens,
+);
+
 class DevEssentialNetworkClient {
   DevEssentialNetworkClient({
     this.baseUrl,
-    this.authToken,
+    this.token,
+    this.onTokenExpired,
     this.defaultConnectTimeout = const Duration(milliseconds: 100000),
     this.defaultReceiveTimeout = const Duration(milliseconds: 100000),
   });
 
   final String? baseUrl;
-  final String? authToken;
+  final DevEssentialNetworkToken? token;
+  final OnTokenExpiredCallback? onTokenExpired;
   final Duration defaultConnectTimeout;
   final Duration defaultReceiveTimeout;
 
@@ -24,7 +30,12 @@ class DevEssentialNetworkClient {
           responseType: ResponseType.json,
         )
         ..httpClientAdapter
-        ..interceptors.addAll([_LoggingInterceptor(authToken)]);
+        ..interceptors.addAll([
+          _LoggingInterceptor(
+            tokenInstance: token,
+            onTokenExpired: onTokenExpired,
+          )
+        ]);
     }
     return dio;
   }
