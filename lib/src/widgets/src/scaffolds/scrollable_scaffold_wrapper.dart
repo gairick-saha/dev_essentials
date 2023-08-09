@@ -5,7 +5,7 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
     Key? key,
     this.scaffoldKey,
     this.appBar,
-    this.slivers,
+    this.slivers = const [],
     this.floatingActionButtonLocation,
     this.floatingActionButton,
     this.onRefresh,
@@ -23,16 +23,17 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
     this.shrinkWrap = false,
     this.isLoading = false,
     this.reverse = false,
-    this.child,
     this.drawer,
     this.endDrawer,
     this.onDrawerChanged,
     this.onEndDrawerChanged,
+    this.allowPagination = false,
+    this.onPaginate,
   }) : super(key: key);
 
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final PreferredSizeWidget? appBar;
-  final List<Widget>? slivers;
+  final List<Widget> slivers;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? floatingActionButton;
   final Future<void> Function()? onRefresh;
@@ -50,11 +51,16 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
   final double notchMargin;
   final bool shrinkWrap;
   final bool reverse;
-  final Widget? child;
   final Widget? drawer;
   final Widget? endDrawer;
   final ValueChanged<bool>? onDrawerChanged;
   final ValueChanged<bool>? onEndDrawerChanged;
+  final bool allowPagination;
+  final OnPaginateCallback? onPaginate;
+
+  static PaginationHookState? of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_BuildInheritedScrollableBody>()
+      ?.paginationHookState;
 
   @override
   Widget build(BuildContext context) {
@@ -95,21 +101,17 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
                 ? const Center(
                     child: LoadingIndictor(),
                   )
-                : child != null
-                    ? SingleChildScrollView(
-                        physics: physics,
-                        reverse: reverse,
-                        child: child,
-                      )
-                    : _BuildBody(
-                        childrens: slivers ?? [],
-                        onRefresh: onRefresh,
-                        scrollController: scrollController,
-                        shrinkWrap: shrinkWrap,
-                        hasAppbar: appBar == null,
-                        physics: physics,
-                        reverse: reverse,
-                      ),
+                : _BuildBody(
+                    childrens: slivers,
+                    onRefresh: onRefresh,
+                    scrollController: scrollController,
+                    shrinkWrap: shrinkWrap,
+                    hasAppbar: appBar == null,
+                    physics: physics,
+                    reverse: reverse,
+                    allowPagination: allowPagination,
+                    onPaginate: onPaginate,
+                  ),
           ),
         ),
       ),
