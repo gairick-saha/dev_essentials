@@ -15,6 +15,7 @@ class _LoggingInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     if (tokenInstance != null) {
+      Dev.print('Token expired => ${tokenInstance!.isAccessTokenExpired}');
       if (tokenInstance!.isAccessTokenExpired && onTokenExpired != null) {
         Dev.print('Expired token refreshing...');
         options.headers = {
@@ -39,10 +40,6 @@ class _LoggingInterceptor extends Interceptor {
     }
 
     if (kDebugMode) {
-      Dev.print('Method => ${(options.method).toString()}');
-      Dev.print('URL => ${options.uri}');
-      Dev.print('Headers => ${options.headers}');
-
       if (options.data != null) {
         if (options.data.runtimeType == FormData) {
           Dev.print(
@@ -52,6 +49,10 @@ class _LoggingInterceptor extends Interceptor {
           Dev.print('Data => ${jsonEncode(options.data).toString()}');
         }
       }
+
+      Dev.print('URL => ${options.uri}');
+      Dev.print('Headers => ${options.headers}');
+      Dev.print('Method => ${(options.method).toString()}');
     }
 
     return handler.next(options);

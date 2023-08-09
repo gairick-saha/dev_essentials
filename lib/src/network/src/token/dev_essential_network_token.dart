@@ -25,6 +25,10 @@ class DevEssentialNetworkToken {
     return {'accessToken': access, 'refreshToken': refresh}.toString();
   }
 
+  bool get isAccessTokenNull => access == null;
+
+  bool get isRefreshTokenNull => refresh == null;
+
   bool get isAccessTokenExpired {
     assert(access != null, 'Access token cannot be null');
     return JwtDecoder.isExpired(access!);

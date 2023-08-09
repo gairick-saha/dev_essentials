@@ -114,10 +114,10 @@ extension NavigationExtension on DevEssential {
 
     if (canPop) {
       if (_global(id).currentState?.canPop() == true) {
-        _global(id).currentState?.pop<T>(result);
+        _global(id).currentState?.pop<T?>(result);
       }
     } else {
-      _global(id).currentState?.pop<T>(result);
+      _global(id).currentState?.pop<T?>(result);
     }
   }
 

@@ -43,9 +43,9 @@ class DevEssentialNetworkClient {
   Future<DevEssentialNetworkDataRespone> get({
     required String url,
     Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onReceiveProgress,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
+    DevEssentialNetworkProgressCallback? onReceiveProgress,
   }) async {
     try {
       Response<dynamic> response = await _client.get(
@@ -61,9 +61,15 @@ class DevEssentialNetworkClient {
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
-        responseData.isSuccess =
+        final bool isSuccess =
             response.statusCode! >= 200 && response.statusCode! < 400;
-        responseData.data = response.data;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
       }
 
       return responseData;
@@ -78,10 +84,10 @@ class DevEssentialNetworkClient {
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
     ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
+    DevEssentialNetworkProgressCallback? onReceiveProgress,
   }) async {
     try {
       Response<dynamic> response = await _client.post(
@@ -99,9 +105,15 @@ class DevEssentialNetworkClient {
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
-        responseData.isSuccess =
+        final bool isSuccess =
             response.statusCode! >= 200 && response.statusCode! < 400;
-        responseData.data = response.data;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
       }
 
       return responseData;
@@ -116,10 +128,10 @@ class DevEssentialNetworkClient {
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
     ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
+    DevEssentialNetworkProgressCallback? onReceiveProgress,
   }) async {
     try {
       Response<dynamic> response = await _client.put(
@@ -137,9 +149,15 @@ class DevEssentialNetworkClient {
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
-        responseData.isSuccess =
+        final bool isSuccess =
             response.statusCode! >= 200 && response.statusCode! < 400;
-        responseData.data = response.data;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
       }
 
       return responseData;
@@ -154,8 +172,8 @@ class DevEssentialNetworkClient {
     required String url,
     dynamic data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
   }) async {
     try {
       Response<dynamic> response = await _client.delete(
@@ -171,9 +189,15 @@ class DevEssentialNetworkClient {
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
-        responseData.isSuccess =
+        final bool isSuccess =
             response.statusCode! >= 200 && response.statusCode! < 400;
-        responseData.data = response.data;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
       }
 
       return responseData;
@@ -188,10 +212,10 @@ class DevEssentialNetworkClient {
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
     ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
+    DevEssentialNetworkProgressCallback? onReceiveProgress,
   }) async {
     try {
       Response<dynamic> response = await _client.post(
@@ -209,9 +233,15 @@ class DevEssentialNetworkClient {
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
-        responseData.isSuccess =
+        final bool isSuccess =
             response.statusCode! >= 200 && response.statusCode! < 400;
-        responseData.data = response.data;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
       }
 
       return responseData;
@@ -226,10 +256,10 @@ class DevEssentialNetworkClient {
     required String url,
     required Map<String, dynamic> data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
     ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
+    DevEssentialNetworkProgressCallback? onReceiveProgress,
   }) async {
     try {
       Response<dynamic> response = await _client.put(
@@ -247,9 +277,15 @@ class DevEssentialNetworkClient {
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
-        responseData.isSuccess =
+        final bool isSuccess =
             response.statusCode! >= 200 && response.statusCode! < 400;
-        responseData.data = response.data;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
       }
 
       return responseData;
@@ -265,11 +301,11 @@ class DevEssentialNetworkClient {
     String savePath, {
     void Function(int, int)? onReceiveProgress,
     Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
+    DevEssentialNetworkCancelToken? cancelToken,
     bool deleteOnError = true,
     String lengthHeader = Headers.contentLengthHeader,
     dynamic data,
-    Options? options,
+    DevEssentialNetworkOptions? options,
   }) async {
     final Response response = await _client.download(
       url,

@@ -82,8 +82,9 @@ class DevEssentialLoadingButton extends HookWidget {
       onPressed: () async {
         if (hideBackgroundDuringLoading) {
           buttonColor.value = Colors.transparent;
-          await onPressed()
-              .whenComplete(() => buttonColor.value = defaultButtonColor);
+          await onPressed().whenComplete(
+            () => buttonColor.value = defaultButtonColor,
+          );
         } else {
           await onPressed();
         }

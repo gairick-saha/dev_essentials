@@ -10,3 +10,7 @@ part 'src/token/dev_essential_network_token.dart';
 part 'src/interceptor/logging_interceptor.dart';
 part 'src/response/dev_essential_network_data_response.dart';
 part 'src/dev_essential_network_client.dart';
+
+typedef DevEssentialNetworkOptions = Options;
+typedef DevEssentialNetworkCancelToken = CancelToken;
+typedef DevEssentialNetworkProgressCallback = ProgressCallback;

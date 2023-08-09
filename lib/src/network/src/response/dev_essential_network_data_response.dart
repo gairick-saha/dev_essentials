@@ -20,4 +20,14 @@ class DevEssentialNetworkDataRespone {
         error: null,
         isSuccess: false,
       );
+
+  @override
+  String toString() {
+    return {
+      'data': data,
+      'statusCode': statusCode,
+      'error': error,
+      'isSuccess': isSuccess,
+    }.toString();
+  }
 }

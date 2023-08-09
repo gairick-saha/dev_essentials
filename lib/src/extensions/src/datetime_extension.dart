@@ -13,6 +13,10 @@ extension FormateDateTimeExtension on DateTime {
     return DateFormat('EEE, d MMM yyyy').format(this);
   }
 
+  String yyyyMMdd() {
+    return DateFormat('yyyy-MM-dd').format(this);
+  }
+
   String toddMMyyyy() {
     return DateFormat('dd-MM-yyyy').format(this);
   }
