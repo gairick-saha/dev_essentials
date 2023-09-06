@@ -29,3 +29,4 @@ part 'src/pageview/controller.dart';
 part 'src/pageview/hook.dart';
 part 'src/pageview/dev_essential_pageview.dart';
 part 'src/paginable_listeview/sliver_list.dart';
+part 'src/paginable_listeview/sliver_grid.dart';

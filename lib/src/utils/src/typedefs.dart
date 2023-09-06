@@ -19,6 +19,7 @@ typedef DevEssentialForm = ReactiveForm;
 typedef DevEssentialFormGroup = FormGroup;
 typedef DevEssentialAbstractFormControl<T> = AbstractControl<T>;
 typedef DevEssentialFormControl<T> = FormControl<T>;
+typedef DevEssentialFormValidator<T> = Validator<T>;
 typedef DevEssentialFormValidators = Validators;
 typedef DevEssentialFormValidationMessage = ValidationMessage;
 typedef DevEssentialFormBuilder = ReactiveFormBuilder;

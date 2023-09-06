@@ -31,6 +31,10 @@ class TimelineListView extends StatelessWidget {
     ),
   })  : isSliverItem = false,
         useBuilder = false,
+        allowPagination = false,
+        errorIndicatorWidget = null,
+        progressIndicatorWidget = null,
+        emptyWidget = null,
         itemCount = children.length,
         itemBuilder = ((BuildContext context, int i) => children[i]),
         super(key: key);
@@ -61,6 +65,10 @@ class TimelineListView extends StatelessWidget {
     ),
   })  : isSliverItem = false,
         useBuilder = true,
+        allowPagination = false,
+        errorIndicatorWidget = null,
+        emptyWidget = null,
+        progressIndicatorWidget = null,
         super(key: key);
 
   const TimelineListView.sliver({
@@ -82,6 +90,10 @@ class TimelineListView extends StatelessWidget {
       horizontal: 10.0,
       vertical: 5.0,
     ),
+    this.allowPagination = false,
+    this.errorIndicatorWidget,
+    this.progressIndicatorWidget,
+    this.emptyWidget,
   })  : isSliverItem = true,
         shrinkWrap = null,
         primary = null,
@@ -112,7 +124,11 @@ class TimelineListView extends StatelessWidget {
   final TextStyle? legendTextStyle;
   final double spaceBetweenLegendAndTimeLine;
   final EdgeInsetsGeometry legendTextPadding;
-
+  final bool allowPagination;
+  final Widget Function(Exception exception, Future<void> Function() tryAgain)?
+      errorIndicatorWidget;
+  final Widget? progressIndicatorWidget;
+  final Widget? emptyWidget;
   @override
   Widget build(BuildContext context) {
     EdgeInsetsGeometry timelinePadding = padding ?? EdgeInsets.zero;
@@ -182,10 +198,21 @@ class TimelineListView extends StatelessWidget {
             ),
           SliverPadding(
             padding: timelinePadding,
-            sliver: SliverList.builder(
-              itemCount: itemCount,
-              itemBuilder: _buildTimelineItem,
-            ),
+            sliver: allowPagination
+                ? PaginableSliverList(
+                    childCount: itemCount,
+                    itemBuilder: _buildTimelineItem,
+                    errorIndicatorWidget: errorIndicatorWidget,
+                    progressIndicatorWidget: progressIndicatorWidget ??
+                        const Center(
+                          child: LoadingIndictor(),
+                        ),
+                    emptyWidget: emptyWidget,
+                  )
+                : SliverList.builder(
+                    itemBuilder: _buildTimelineItem,
+                    itemCount: itemCount,
+                  ),
           ),
         ],
       );

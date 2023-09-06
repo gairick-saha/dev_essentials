@@ -179,7 +179,7 @@ class DevEssentialUtility {
       'webp',
     ];
 
-    final ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
     return imageExtensions.contains(ext);
   }
 
@@ -197,7 +197,7 @@ class DevEssentialUtility {
       'aif',
     ];
 
-    final ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
 
     return audioExtensions.contains(ext);
   }
@@ -218,7 +218,7 @@ class DevEssentialUtility {
       'webm',
     ];
 
-    var ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
 
     return videoExtensions.contains(ext);
   }
@@ -238,7 +238,7 @@ class DevEssentialUtility {
       'wpt',
     ];
 
-    final ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
 
     return wordExtensions.contains(ext);
   }
@@ -251,7 +251,7 @@ class DevEssentialUtility {
       'csv',
     ];
 
-    final ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
 
     return excelExtensions.contains(ext);
   }
@@ -264,18 +264,16 @@ class DevEssentialUtility {
       'ppsx',
     ];
 
-    final ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
 
     return pptExtensions.contains(ext);
   }
 
-  static bool isAPK(String filePath) {
-    return filePath.toLowerCase().endsWith(".apk");
-  }
+  static bool isAPK(String filePath) =>
+      Dev.extension(filePath).toLowerCase() == '.apk';
 
-  static bool isPDF(String filePath) {
-    return filePath.toLowerCase().endsWith(".pdf");
-  }
+  static bool isPDF(String filePath) =>
+      Dev.extension(filePath).toLowerCase() == '.pdf';
 
   static bool isHTML(String filePath) {
     const List<String> htmlExtensions = <String>[
@@ -283,7 +281,7 @@ class DevEssentialUtility {
       'htm',
     ];
 
-    final ext = filePath.toLowerCase();
+    final ext = Dev.extension(filePath).toLowerCase().replaceAll('.', '');
 
     return htmlExtensions.contains(ext);
   }

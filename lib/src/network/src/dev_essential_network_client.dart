@@ -208,6 +208,50 @@ class DevEssentialNetworkClient {
     }
   }
 
+  Future<DevEssentialNetworkDataRespone> patch({
+    required String url,
+    required Map<String, dynamic> data,
+    Map<String, dynamic>? queryParameters,
+    DevEssentialNetworkOptions? options,
+    DevEssentialNetworkCancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    DevEssentialNetworkProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      Response<dynamic> response = await _client.patch(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      DevEssentialNetworkDataRespone responseData =
+      DevEssentialNetworkDataRespone.empty();
+
+      if (response.statusCode != null) {
+        responseData.statusCode = response.statusCode!;
+        final bool isSuccess =
+            response.statusCode! >= 200 && response.statusCode! < 400;
+        responseData.isSuccess = isSuccess;
+
+        if (isSuccess) {
+          responseData.data = response.data;
+        } else {
+          responseData.error = response.data;
+        }
+      }
+
+      return responseData;
+    } on FormatException catch (_) {
+      throw const FormatException('Unable to process the data');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<DevEssentialNetworkDataRespone> multipartPost({
     required String url,
     required Map<String, dynamic> data,

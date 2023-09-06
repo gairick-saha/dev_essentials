@@ -42,8 +42,7 @@ class _LoggingInterceptor extends Interceptor {
     if (kDebugMode) {
       if (options.data != null) {
         if (options.data.runtimeType == FormData) {
-          Dev.print(
-              'FormData fields => ${jsonEncode(options.data.fields).toString()}');
+          Dev.print('FormData fields => ${options.data.fields}');
           Dev.print('FormData files => ${options.data.files}');
         } else {
           Dev.print('Data => ${jsonEncode(options.data).toString()}');
@@ -52,7 +51,11 @@ class _LoggingInterceptor extends Interceptor {
 
       Dev.print('URL => ${options.uri}');
       Dev.print('Headers => ${options.headers}');
-      Dev.print('Method => ${(options.method).toString()}');
+      Dev.print('Method => ${options.method.toString()}');
+    } else if (options.data.runtimeType == FormData) {
+      options.headers = {
+        'Authorization': tokenInstance!.token,
+      };
     }
 
     return handler.next(options);
@@ -70,17 +73,17 @@ class _LoggingInterceptor extends Interceptor {
       case DioExceptionType.receiveTimeout:
         break;
       case DioExceptionType.badResponse:
-        if (kDebugMode) {
-          Dev.print(
-              'From OnError interceptor headers => ${err.requestOptions.headers}');
-          Dev.print(
-              'From OnError interceptor method => ${err.requestOptions.method}');
-          Dev.print(
-              'From OnError interceptor url => ${err.requestOptions.uri}');
-          Dev.print('From OnError interceptor error => ${err.error}');
-          Dev.print(
-              'From OnError interceptor error response => ${err.response}');
-        }
+        // if (kDebugMode) {
+        //   Dev.print(
+        //       'From OnError interceptor headers => ${err.requestOptions.headers}');
+        //   Dev.print(
+        //       'From OnError interceptor method => ${err.requestOptions.method}');
+        //   Dev.print(
+        //       'From OnError interceptor url => ${err.requestOptions.uri}');
+        //   Dev.print('From OnError interceptor error => ${err.error}');
+        //   Dev.print(
+        //       'From OnError interceptor error response => ${err.response}');
+        // }
         return handler.resolve(err.response!);
       case DioExceptionType.badCertificate:
         break;

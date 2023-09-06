@@ -43,7 +43,7 @@ class PaginableSliverList extends StatelessWidget {
 
   final IndexedWidgetBuilder itemBuilder;
   final IndexedWidgetBuilder? separatorBuilder;
-  final Widget Function(Exception exception, Future<void> Function() tryAgain)
+  final Widget Function(Exception exception, Future<void> Function() tryAgain)?
       errorIndicatorWidget;
   final Widget progressIndicatorWidget;
   final Widget? emptyWidget;
@@ -92,7 +92,7 @@ class PaginableSliverList extends StatelessWidget {
                 );
               } else if (paginationHookState.listLastItem ==
                   PaginableListLastItem.errorIndicator) {
-                return errorIndicatorWidget(
+                return errorIndicatorWidget?.call(
                   paginationHookState.exceptionValue,
                   paginationHookState.performPagination,
                 );
@@ -148,7 +148,7 @@ class PaginableSliverList extends StatelessWidget {
               );
             } else if (paginationHookState.listLastItem ==
                 PaginableListLastItem.errorIndicator) {
-              return errorIndicatorWidget(
+              return errorIndicatorWidget?.call(
                 paginationHookState.exceptionValue,
                 paginationHookState.performPagination,
               );
