@@ -40,6 +40,11 @@ extension DevEssentialExtension on DevEssential {
   DevEssentialCustomTransition? get customTransition =>
       _hookState.customTransition;
 
-  // set customTransition(DevEssentialCustomTransition? newTransition) =>
-  //     _hookState.customTransition = newTransition;
+  set customTransition(DevEssentialCustomTransition? newTransition) =>
+      _hookState.customTransition = newTransition;
+
+  TextDirection get textDirection =>
+      intl.Bidi.isRtlLanguage(Localizations.localeOf(context).languageCode)
+          ? TextDirection.rtl
+          : TextDirection.ltr;
 }

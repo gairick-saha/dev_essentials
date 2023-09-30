@@ -2,67 +2,67 @@ part of '../extensions.dart';
 
 extension FormateDateTimeExtension on DateTime {
   String toEEEdMMMy() {
-    return DateFormat('EEE, d MMM y').format(this);
+    return intl.DateFormat('EEE, d MMM y').format(this);
   }
 
   String toEEEdMMM() {
-    return DateFormat('EEE, d MMM').format(this);
+    return intl.DateFormat('EEE, d MMM').format(this);
   }
 
   String toEEEdMMMyyyy() {
-    return DateFormat('EEE, d MMM yyyy').format(this);
+    return intl.DateFormat('EEE, d MMM yyyy').format(this);
   }
 
   String yyyyMMdd() {
-    return DateFormat('yyyy-MM-dd').format(this);
+    return intl.DateFormat('yyyy-MM-dd').format(this);
   }
 
   String toddMMyyyy() {
-    return DateFormat('dd-MM-yyyy').format(this);
+    return intl.DateFormat('dd-MM-yyyy').format(this);
   }
 
   String toddMMM() {
-    return DateFormat('dd MMM').format(this);
+    return intl.DateFormat('dd MMM').format(this);
   }
 
   String tod() {
-    return DateFormat('d').format(this);
+    return intl.DateFormat('d').format(this);
   }
 
   String tom() {
-    return DateFormat('MMM').format(this);
+    return intl.DateFormat('MMM').format(this);
   }
 
   String toEEE() {
-    return DateFormat('EEE').format(this);
+    return intl.DateFormat('EEE').format(this);
   }
 
   String todMMM() {
-    return DateFormat('d MMM').format(this);
+    return intl.DateFormat('d MMM').format(this);
   }
 
   String time12HourFormat() {
-    return DateFormat('hh:mm a').format(this);
+    return intl.DateFormat('hh:mm a').format(this);
   }
 
   String time24HourFormat() {
-    return DateFormat('HH:mm').format(this);
+    return intl.DateFormat('HH:mm').format(this);
   }
 
   String custom(String? pattern) {
-    return DateFormat(pattern ?? 'hh:mm a - dd MMM yyyy').format(this);
+    return intl.DateFormat(pattern ?? 'hh:mm a - dd MMM yyyy').format(this);
   }
 
   String toddMMMyyyy() {
-    return DateFormat('dd MMM, yyyy').format(this);
+    return intl.DateFormat('dd MMM, yyyy').format(this);
   }
 
   String tohm() {
-    return DateFormat.jm().format(this);
+    return intl.DateFormat.jm().format(this);
   }
 
   String toyyyyMMdd() {
-    return DateFormat('yyyy-MM-dd').format(this);
+    return intl.DateFormat('yyyy-MM-dd').format(this);
   }
 
   int getAge() {
