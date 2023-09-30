@@ -14,6 +14,8 @@ import 'package:sliver_tools/sliver_tools.dart';
 import '../../dev_essentials.dart';
 import '../hooks/hooks.dart';
 
+export 'src/dropdown/dropdown.dart';
+
 part 'src/loading_indicator.dart';
 part 'src/loading_button.dart';
 part 'src/scaffolds/scaffold_body.dart';
