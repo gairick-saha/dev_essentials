@@ -8,7 +8,7 @@ class SplashState {
   });
 
   final bool isSplashCompleted;
-  final SplashConfig? splashConfig;
+  final SplashConfig splashConfig;
   final String appVersion;
 
   SplashState copyWith({

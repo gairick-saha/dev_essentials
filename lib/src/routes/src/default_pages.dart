@@ -15,18 +15,24 @@ class DevEssentialPages {
     SplashConfig? splashConfig,
   }) {
     List<DevEssentialPage> defaultPages = [
-      if (splashConfig != null)
-        DevEssentialPage(
-          name: _DevEssentialPaths.root,
-          builder: (context, arguments) => BlocProvider<SplashCubit>(
-            create: (context) {
-              SplashCubit cubit = SplashCubit(splashConfig: splashConfig);
-              cubit.initSplash();
-              return cubit;
-            },
-            child: const SplashView(),
-          ),
+      DevEssentialPage(
+        name: _DevEssentialPaths.root,
+        builder: (context, arguments) => BlocProvider<SplashCubit>(
+          create: (context) {
+            SplashCubit cubit = SplashCubit(
+              splashConfig: splashConfig ??
+                  SplashConfig(
+                    routeAfterSplash: (BuildContext splashContext) async =>
+                        userDefinedPages?.first.name,
+                    splashDuration: 3.seconds,
+                  ),
+            );
+            cubit.initSplash();
+            return cubit;
+          },
+          child: const SplashView(),
         ),
+      ),
     ];
     if (userDefinedPages != null) {
       defaultPages.addAll(userDefinedPages);

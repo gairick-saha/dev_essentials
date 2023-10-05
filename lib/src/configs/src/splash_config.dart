@@ -7,8 +7,10 @@ class SplashConfig {
     this.logoPadding,
     this.showVersionNumber = true,
     this.backgroundColor,
+    this.backgroundGradient,
     this.foregroundColor,
     this.darkBackgroundColor,
+    this.darkBackgroundGradient,
     this.darkForegroundColor,
     this.splashDuration,
     this.customUiBuilder,
@@ -20,8 +22,10 @@ class SplashConfig {
   final EdgeInsetsGeometry? logoPadding;
   final bool showVersionNumber;
   final Color? backgroundColor;
+  final Gradient? backgroundGradient;
   final Color? foregroundColor;
   final Color? darkBackgroundColor;
+  final Gradient? darkBackgroundGradient;
   final Color? darkForegroundColor;
   final Duration? splashDuration;
   final SplashUIBuilder? customUiBuilder;

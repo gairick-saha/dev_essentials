@@ -1,56 +1,44 @@
 part of '../apps.dart';
 
-class DevEssentialMaterialApp extends HookWidget {
+class DevEssentialMaterialApp extends _DevEssentialApp {
   const DevEssentialMaterialApp({
-    Key? key,
-    required this.title,
-    this.pages,
-    this.home,
-    this.debugShowCheckedModeBanner = true,
-    this.theme,
-    this.darkTheme,
-    this.themeMode = ThemeMode.system,
-    this.builder,
-    this.navigatorObservers = const [],
-    this.splashConfig,
-    this.useToastNotification = true,
-    this.unknownRoute,
-    this.defaultTransition,
-    this.defaultTransitionDuration,
-    this.defaultTransitionCurve,
-    this.defaultDialogTransitionCurve,
-    this.defaultDialogTransitionDuration,
-    this.customTransition,
-    this.showDevicePreview = false,
-  })  : assert(
-          pages == null || home == null,
-          'Either the home property must be specified, '
-          'or the pages property need be specified',
-        ),
-        super(key: key);
-
-  final String title;
-  final List<DevEssentialPage>? pages;
-  final Widget? home;
-  final bool debugShowCheckedModeBanner;
-  final ThemeData? theme;
-  final ThemeData? darkTheme;
-  final ThemeMode themeMode;
-  final TransitionBuilder? builder;
-  final List<NavigatorObserver> navigatorObservers;
-  final SplashConfig? splashConfig;
-  final bool useToastNotification;
-  final DevEssentialPage? unknownRoute;
-  final DevEssentialTransition? defaultTransition;
-  final Duration? defaultTransitionDuration;
-  final Curve? defaultTransitionCurve;
-  final Curve? defaultDialogTransitionCurve;
-  final Duration? defaultDialogTransitionDuration;
-  final DevEssentialCustomTransition? customTransition;
-  final bool showDevicePreview;
+    super.key,
+    required super.title,
+    super.pages,
+    super.home,
+    super.debugShowCheckedModeBanner = true,
+    super.theme,
+    super.darkTheme,
+    super.themeMode = ThemeMode.system,
+    super.builder,
+    super.navigatorObservers = const [],
+    super.splashConfig,
+    super.useToastNotification = true,
+    super.unknownRoute,
+    super.defaultTransition,
+    super.defaultTransitionDuration,
+    super.defaultTransitionCurve,
+    super.defaultDialogTransitionCurve,
+    super.defaultDialogTransitionDuration,
+    super.customTransition,
+    super.showDevicePreview = false,
+  });
 
   static InheritedDevEssentialRootApp of(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<InheritedDevEssentialRootApp>()!;
+
+  @override
+  Route<dynamic> onGenerateRoute(RouteSettings settings) => Dev.routeGenerator(
+        settings: settings,
+        unknownRoute: unknownRoute,
+      );
+
+  @override
+  List<Route<dynamic>> onGenerateInitialRoutes(String name) =>
+      Dev.initialRouteGenerator(
+        name,
+        unknownRoute: unknownRoute,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -113,15 +101,4 @@ class DevEssentialMaterialApp extends HookWidget {
       builder: (context) => materialApp,
     );
   }
-
-  Route<dynamic> onGenerateRoute(RouteSettings settings) => Dev.routeGenerator(
-        settings: settings,
-        unknownRoute: unknownRoute,
-      );
-
-  List<Route<dynamic>> onGenerateInitialRoutes(String name) =>
-      Dev.initialRouteGenerator(
-        name,
-        unknownRoute: unknownRoute,
-      );
 }
