@@ -8,7 +8,7 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
     Map<String, ValidationMessageFunction>? validationMessages,
     bool Function(AbstractControl<dynamic>)? showErrorsCallback,
     InputDecoration decoration = const InputDecoration(),
-    required List<DropdownMenuItem<T>> items,
+    required List<DevEssentialDropdownMenuItem<T>> items,
     bool readOnly = false,
     Widget? disabledHint,
     DropdownButtonBuilder? selectedItemBuilder,
@@ -24,12 +24,14 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
     bool enabelBorder = true,
     InputBorder? border,
     TextStyle? style,
-    ReactiveFormFieldCallback<T>? onTap,
+    // ReactiveFormFieldCallback<T>? onTap,
     ReactiveFormFieldCallback<T>? onChanged,
     Widget? icon,
     Color? iconDisabledColor,
     Color? iconEnabledColor,
     double iconSize = 24.0,
+    bool showLabel = true,
+    bool isRequired = false,
   })  : _items = items,
         _readOnly = readOnly,
         _disabledHint = disabledHint,
@@ -52,6 +54,27 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
                   fillColor: fillColor,
                   filled: filled,
                   contentPadding: contentPadding,
+                  label: showLabel
+                      ? Text.rich(
+                          TextSpan(
+                            text: hintText?.capitalizeFirst,
+                            children: [
+                              if (isRequired)
+                                TextSpan(
+                                  text: ' *',
+                                  style: (labelStyle ??
+                                          Theme.of(state.context)
+                                              .textTheme
+                                              .labelLarge)
+                                      ?.copyWith(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          style: labelStyle,
+                        )
+                      : null,
                   hintText: hintText ??
                       (showHintText ? formControlName?.capitalize : null),
                   hintStyle: hintStyle ??
@@ -88,18 +111,28 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
                 isEmpty: state.effectiveValue == null,
                 decoration: effectiveDecoration,
                 child: DropdownButtonHideUnderline(
-                  child: DropdownButton<T>(
-                    icon: icon,
-                    iconDisabledColor: iconDisabledColor,
-                    iconEnabledColor: iconEnabledColor,
-                    iconSize: iconSize,
+                  child: DevEssentialDropdownButton<T>(
+                    iconStyleData: DevEssentialDropdownIconStyleData(
+                      icon: icon ??
+                          Icon(DevEssentialPlatform.isIOS
+                              ? CupertinoIcons.chevron_down
+                              : Icons.arrow_drop_down),
+                      iconDisabledColor: iconDisabledColor,
+                      iconEnabledColor: iconEnabledColor,
+                      iconSize: iconSize,
+                    ),
+
                     focusNode: state.focusNode,
                     value: state.effectiveValue,
                     items: items,
                     disabledHint: state.effectiveDisabledHint,
                     isDense: true,
+                    dropdownStyleData: const DevEssentialDropdownStyleData(
+                      maxHeight: 250,
+                    ),
+
                     alignment: AlignmentDirectional.topCenter,
-                    onTap: onTap != null ? () => onTap(state.control) : null,
+                    // onTap: onTap != null ? () => onTap(state.control) : null,
                     onChanged: state.isDisabled
                         ? null
                         : (value) {
@@ -115,7 +148,7 @@ class DevEssentialReactiveDropdownField<T> extends ReactiveFormField<T, T> {
 
   final bool _readOnly;
   final Widget? _disabledHint;
-  final List<DropdownMenuItem<T>> _items;
+  final List<DevEssentialDropdownMenuItem<T>> _items;
   final DropdownButtonBuilder? _selectedItemBuilder;
 
   @override
@@ -152,7 +185,8 @@ class _DevEssentialReactiveDropdownFormTextFieldState<T>
           .indexWhere((item) => item.value == effectiveValue);
       if (selectedItemIndex > -1) {
         effectiveDisabledHint = currentWidget._selectedItemBuilder != null
-            ? currentWidget._selectedItemBuilder!(context)
+            ? currentWidget._selectedItemBuilder
+                .call(context)
                 .elementAt(selectedItemIndex)
             : currentWidget._items.elementAt(selectedItemIndex).child;
       }

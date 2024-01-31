@@ -4,40 +4,42 @@ class _LoggingInterceptor extends Interceptor {
   _LoggingInterceptor({
     this.tokenInstance,
     this.onTokenExpired,
+    this.globalHeaders,
   });
 
   final DevEssentialNetworkToken? tokenInstance;
   final OnTokenExpiredCallback? onTokenExpired;
+  final Map<String, dynamic>? globalHeaders;
 
   @override
   Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    final defaultHeaders = {
+      ...options.headers,
+      if (globalHeaders != null) ...globalHeaders!,
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    };
     if (tokenInstance != null) {
-      Dev.print('Token expired => ${tokenInstance!.isAccessTokenExpired}');
-      if (tokenInstance!.isAccessTokenExpired && onTokenExpired != null) {
-        Dev.print('Expired token refreshing...');
-        options.headers = {
-          ...options.headers,
-          'Content-type': 'application/json',
-          'Authorization':
-              (await onTokenExpired?.call(tokenInstance!))?.token ??
-                  tokenInstance!.token,
-        };
+      if (onTokenExpired != null) {
+        Dev.print('Token expired => ${tokenInstance!.isAccessTokenExpired}');
+        if (tokenInstance!.isAccessTokenExpired) {
+          Dev.print('Refreshing expired token...');
+          defaultHeaders['Authorization'] = await onTokenExpired
+              ?.call(tokenInstance!)
+              .then((DevEssentialNetworkToken? updatedToken) =>
+                  updatedToken?.token ?? tokenInstance!.token);
+        } else {
+          defaultHeaders['Authorization'] = tokenInstance!.token;
+        }
       } else {
-        options.headers = {
-          ...options.headers,
-          'Content-type': 'application/json',
-          'Authorization': tokenInstance!.token,
-        };
+        defaultHeaders['Authorization'] = tokenInstance!.token;
       }
-    } else {
-      options.headers = {
-        ...options.headers,
-        'Content-type': 'application/json',
-      };
     }
+
+    options.headers = defaultHeaders;
 
     if (kDebugMode) {
       if (options.data != null) {

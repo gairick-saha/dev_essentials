@@ -1,84 +1,74 @@
 part of '../extensions.dart';
 
+extension DevEssentialPagesListExt on List<DevEssentialPage> {
+  Iterable<DevEssentialPage> pickFromRoute(String route) {
+    return skipWhile((value) => value.name != route);
+  }
+
+  Iterable<DevEssentialPage> pickAfterRoute(String route) {
+    if (route == '/') {
+      return pickFromRoute(route).skip(1).take(1);
+    }
+
+    return pickFromRoute(route).skip(1);
+  }
+}
+
 extension NavigationExtension on DevEssential {
-  static final DevEssentialHookState _hookState =
-      DevEssentialHookState.instance;
+  bool get defaultPopGesture => _appConfig.defaultPopGesture;
 
-  DevEssentialRoutingTree get routingTree => _hookState.routingTree;
+  bool get defaultOpaqueRoute => _appConfig.defaultOpaqueRoute;
 
-  DevEssentialRouting get routing => _hookState.routing;
+  DevEssentialTransition? get defaultTransition => _appConfig.defaultTransition;
 
-  GlobalKey<NavigatorState> get key => _hookState.rootNavigatorKey;
+  Duration get defaultTransitionDuration =>
+      _appConfig.defaultTransitionDuration;
 
-  Map<Object, GlobalKey<NavigatorState>> get nestedNavigatorKeys =>
-      _hookState.nestedNavigatorKeys;
+  Curve get defaultTransitionCurve => _appConfig.defaultTransitionCurve;
 
-  String? get currentRoute => routing.currentRoute;
+  Curve get defaultDialogTransitionCurve =>
+      _appConfig.defaultDialogTransitionCurve;
 
-  String? get previousRoute => routing.previousRoute;
+  Duration get defaultDialogTransitionDuration =>
+      _appConfig.defaultDialogTransitionDuration;
 
-  NavigatorState? get navigator => NavigationExtension(Dev).key.currentState;
+  DevEssentialCustomTransition? get customTransition =>
+      _appConfig.customTransition;
 
-  Object? get arguments => routing.arguments;
+  DevEssentialRouting get routing => _appConfig.routing;
 
-  Map<String, String> get parameters => _hookState.parameters;
+  void appUpdate() => _hookState.update();
 
-  GlobalKey<NavigatorState> nestedKey(Object key) =>
-      _hookState.addNestedNavigatorKey(key);
+  void changeTheme(ThemeData theme) => _hookState.setTheme(theme);
 
-  GlobalKey<NavigatorState> _global(Object? k) {
-    GlobalKey<NavigatorState> navKey;
+  void changeThemeMode(ThemeMode themeMode) =>
+      _hookState.setThemeMode(themeMode);
 
-    if (k == null) {
-      navKey = key;
-    } else {
-      if (!nestedNavigatorKeys.containsKey(k)) {
-        throw 'Navigator with id ($k) not found';
-      }
-      navKey = nestedNavigatorKeys[k]!;
-    }
+  GlobalKey<NavigatorState>? addKey(GlobalKey<NavigatorState> newKey) =>
+      _hookState.addKey(newKey);
 
-    if (navKey.currentContext == null) {
-      throw """You are trying to use contextless navigation without a DevEssentialMaterialApp.""";
-    }
+  DevEssentialRouterDelegate get rootDelegate => _hookState.rootDelegate;
 
-    return navKey;
-  }
+  TDelegate? delegate<TDelegate extends RouterDelegate<TPage>, TPage>() =>
+      _appConfig.routerDelegate as TDelegate?;
 
-  WidgetBuilder _resolvePage(dynamic page, String method) {
-    if (page is WidgetBuilder) {
-      return page;
-    } else if (page is Widget) {
-      // Dev.print(
-      //   'WARNING, consider using: "Dev.$method(() => Page())" instead of "Dev.$method(Page())". Using a widget function instead of a widget fully guarantees that the widget and its controllers will be removed from memory when they are no longer used.',
-      // );
-      return (BuildContext context) => page;
-    } else if (page is String) {
-      throw 'Unexpected String, use toNamed() instead';
-    } else {
-      throw 'Unexpected format, you can only use widgets and widget functions here';
-    }
-  }
+  GlobalKey<NavigatorState> get key => _hookState.key;
 
-  String _cleanRouteName(String name) {
-    name = name.replaceAll('() => ', '');
-    name = name.replaceAll('(BuildContext context) => ', '');
-    name = name.replaceAll('(context) => ', '');
+  Map<String, DevEssentialRouterDelegate> get keys => _hookState.keys;
 
-    if (!name.startsWith('/')) {
-      name = '/$name';
-    }
-    return Uri.tryParse(name)?.toString() ?? name;
-  }
+  DevEssentialRouterDelegate? nestedKey(String? key) =>
+      _hookState.nestedKey(key);
 
-  bool get isSnackbarOpen =>
-      DevEssentialSnackbarController.isSnackbarBeingShown;
+  String? get currentRoute => routing.current;
 
-  void closeAllSnackbars() =>
-      DevEssentialSnackbarController.cancelAllSnackbars();
+  String? get previousRoute => routing.previous;
 
-  Future<void> closeCurrentSnackbar() async =>
-      await DevEssentialSnackbarController.closeCurrentSnackbar();
+  dynamic get arguments => rootDelegate.arguments();
+
+  Map<String, String?> get parameters => _hookState.rootDelegate.parameters;
+
+  set parameters(Map<String, String?> newParameters) =>
+      _hookState.parameters = newParameters;
 
   bool get isDialogOpen => routing.isDialog;
 
@@ -86,254 +76,268 @@ extension NavigationExtension on DevEssential {
 
   Route<dynamic>? get rawRoute => routing.route;
 
-  bool get isOverlaysOpen =>
-      isSnackbarOpen || isDialogOpen || isBottomSheetOpen;
+  bool get isPopGestureEnable => defaultPopGesture;
 
-  bool get isOverlaysClosed =>
-      !isSnackbarOpen && !isDialogOpen && !isBottomSheetOpen;
+  bool get isOpaqueRouteDefault => defaultOpaqueRoute;
 
-  void back<T>({
-    T? result,
-    bool closeOverlays = false,
-    bool canPop = true,
-    Object? id,
-  }) {
-    if (isSnackbarOpen && !closeOverlays) {
-      closeCurrentSnackbar();
-      return;
-    }
+  DevEssentialPageRoutePredicate withName(String name) =>
+      rootDelegate.withName(name);
 
-    if (closeOverlays && isOverlaysOpen) {
-      if (isSnackbarOpen) {
-        closeAllSnackbars();
-      }
-      navigator?.popUntil((route) {
-        return (!isDialogOpen && !isBottomSheetOpen);
-      });
-    }
-
-    if (canPop) {
-      if (_global(id).currentState?.canPop() == true) {
-        _global(id).currentState?.pop<T?>(result);
-      }
+  DevEssentialRouterDelegate searchDelegate(String? k) {
+    DevEssentialRouterDelegate key;
+    if (k == null) {
+      key = rootDelegate;
     } else {
-      _global(id).currentState?.pop<T?>(result);
+      if (!keys.containsKey(k)) {
+        throw 'Route id ($k) not found';
+      }
+      key = keys[k]!;
     }
+
+    return key;
   }
 
-  bool canGoBack({Object? id}) => _global(id).currentState?.canPop() == true;
-
-  Future<bool> handleNestedNavigationBackButton({
-    required Object? navigatorId,
-    OnAppCloseCallback? onAppCloseCallback,
-  }) async {
-    if (canGoBack(id: navigatorId)) {
-      back(id: navigatorId);
-    } else if (canGoBack()) {
-      back();
-    } else if (onAppCloseCallback != null) {
-      return await onAppCloseCallback();
-    } else {
-      return true;
-    }
-
-    return false;
-  }
-
-  Future<T?> to<T>(
-    dynamic page, {
-    Object? id,
-    String? routeName,
-    dynamic arguments,
-    Map<String, String>? parameters,
+  Future<T?>? to<T extends Object?>(
+    Widget page, {
+    bool? opaque,
     DevEssentialTransition? transition,
     Curve? curve,
-    DevEssentialCustomTransition? customTransition,
-  }) async {
-    routeName ??= "/${page.runtimeType}";
-    if (routeName == currentRoute) {
-      return null;
-    }
-    return _global(id).currentState?.push<T>(
-          DevEssentialRoute<T>(
-            name: routeName,
-            arguments: arguments,
-            parameters: parameters,
-            pageBuilder: _resolvePage(page, 'to'),
-            transition: transition,
-            curve: curve,
-            customTransition: customTransition,
-          ),
-        );
-  }
-
-  Future<T?>? off<T>(
-    dynamic page, {
-    Object? id,
+    Duration? duration,
+    String? id,
     String? routeName,
+    bool fullscreenDialog = false,
     dynamic arguments,
-    Map<String, String>? parameters,
+    bool preventDuplicates = true,
+    bool? popGesture,
+    bool showCupertinoParallax = true,
+    double Function(BuildContext context)? gestureWidth,
+    bool rebuildStack = true,
+    PreventDuplicateHandlingMode preventDuplicateHandlingMode =
+        PreventDuplicateHandlingMode.reorderRoutes,
   }) {
-    routeName ??= "/${page.runtimeType.toString()}";
-    routeName = _cleanRouteName(routeName);
-    if (routeName == currentRoute) {
-      return null;
-    }
-    return _global(id).currentState?.pushReplacement(
-          DevEssentialRoute(
-            pageBuilder: _resolvePage(page, 'off'),
-            arguments: arguments,
-            name: routeName,
-            parameters: parameters,
-          ),
-        );
+    return searchDelegate(id).to(
+      (_, __) => page,
+      opaque: opaque,
+      transition: transition,
+      curve: curve,
+      duration: duration,
+      id: id,
+      routeName: routeName,
+      fullscreenDialog: fullscreenDialog,
+      arguments: arguments,
+      preventDuplicates: preventDuplicates,
+      popGesture: popGesture,
+      showCupertinoParallax: showCupertinoParallax,
+      gestureWidth: gestureWidth,
+      rebuildStack: rebuildStack,
+      preventDuplicateHandlingMode: preventDuplicateHandlingMode,
+    );
   }
 
   Future<T?>? toNamed<T>(
-    String routeName, {
-    Object? arguments,
-    Object? id,
+    String page, {
+    dynamic arguments,
+    String? id,
+    bool preventDuplicates = true,
     Map<String, String>? parameters,
   }) {
-    String newRoute = routeName;
-    if (routeName == currentRoute) {
-      return null;
-    }
-
     if (parameters != null) {
-      final Uri uri = Uri(path: routeName, queryParameters: parameters);
-      newRoute = uri.toString();
+      final uri = Uri(path: page, queryParameters: parameters);
+      page = uri.toString();
     }
 
-    return _global(id).currentState?.pushNamed<T>(
-          newRoute,
-          arguments: arguments,
-        );
+    return searchDelegate(id).toNamed(
+      page,
+      arguments: arguments,
+      id: id,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+    );
   }
 
   Future<T?>? offNamed<T>(
-    String routeName, {
-    Object? arguments,
-    Object? id,
+    String page, {
+    dynamic arguments,
+    String? id,
     Map<String, String>? parameters,
   }) {
-    if (routeName == currentRoute) {
-      return null;
-    }
-
     if (parameters != null) {
-      final Uri uri = Uri(path: routeName, queryParameters: parameters);
-      routeName = uri.toString();
+      final uri = Uri(path: page, queryParameters: parameters);
+      page = uri.toString();
     }
-
-    return _global(id).currentState?.pushReplacementNamed(
-          routeName,
-          arguments: arguments,
-        );
+    return searchDelegate(id).offNamed(
+      page,
+      arguments: arguments,
+      id: id,
+      parameters: parameters,
+    );
   }
 
-  void until(RoutePredicate predicate, {Object? id}) =>
-      _global(id).currentState?.popUntil(predicate);
-
-  Future<T?>? offUntil<T>(Route<T> page, RoutePredicate predicate,
-          {Object? id}) =>
-      _global(id).currentState?.pushAndRemoveUntil<T>(page, predicate);
+  void until(DevEssentialPageRoutePredicate predicate, {String? id}) =>
+      searchDelegate(id).backUntil(predicate);
 
   Future<T?>? offNamedUntil<T>(
-    String newRouteName,
-    RoutePredicate predicate, {
-    Object? id,
-    Object? arguments,
+    String page,
+    DevEssentialPageRoutePredicate? predicate, {
+    String? id,
+    dynamic arguments,
     Map<String, String>? parameters,
   }) {
-    if (newRouteName == currentRoute) {
-      return null;
-    }
-
     if (parameters != null) {
-      final Uri uri = Uri(path: newRouteName, queryParameters: parameters);
-      newRouteName = uri.toString();
+      final uri = Uri(path: page, queryParameters: parameters);
+      page = uri.toString();
     }
 
-    return _global(id).currentState?.pushNamedAndRemoveUntil<T>(
-          newRouteName,
-          predicate,
-          arguments: arguments,
-        );
+    return searchDelegate(id).offNamedUntil<T>(
+      page,
+      predicate: predicate,
+      id: id,
+      arguments: arguments,
+      parameters: parameters,
+    );
   }
 
   Future<T?>? offAndToNamed<T>(
-    String routeName, {
+    String page, {
     dynamic arguments,
+    String? id,
+    dynamic result,
     Map<String, String>? parameters,
-    Object? id,
-    Object? result,
   }) {
-    if (routeName == currentRoute) {
-      return null;
-    }
-
     if (parameters != null) {
-      final uri = Uri(path: routeName, queryParameters: parameters);
-      routeName = uri.toString();
+      final uri = Uri(path: page, queryParameters: parameters);
+      page = uri.toString();
     }
-    return _global(id).currentState?.popAndPushNamed(
-          routeName,
-          arguments: arguments,
-          result: result,
-        );
+    return searchDelegate(id).backAndtoNamed(
+      page,
+      arguments: arguments,
+      result: result,
+    );
   }
 
-  void removeRoute(Route<dynamic> route, {Object? id}) =>
-      _global(id).currentState?.removeRoute(route);
+  void removeRoute(String name, {String? id}) {
+    return searchDelegate(id).removeRoute(name);
+  }
 
   Future<T?>? offAllNamed<T>(
     String newRouteName, {
-    Object? id,
-    RoutePredicate? predicate,
-    Object? arguments,
+    dynamic arguments,
+    String? id,
     Map<String, String>? parameters,
   }) {
-    if (newRouteName == currentRoute) {
-      return null;
-    }
-
     if (parameters != null) {
-      final Uri uri = Uri(path: newRouteName, queryParameters: parameters);
+      final uri = Uri(path: newRouteName, queryParameters: parameters);
       newRouteName = uri.toString();
     }
 
-    return _global(id).currentState?.pushNamedAndRemoveUntil<T>(
-          newRouteName,
-          predicate ?? (_) => false,
-          arguments: arguments,
-        );
+    return searchDelegate(id).offAllNamed<T>(
+      newRouteName,
+      arguments: arguments,
+      id: id,
+      parameters: parameters,
+    );
   }
 
-  Route<DevEssentialRoute> routeGenerator({
-    required RouteSettings settings,
-    DevEssentialPage? unknownRoute,
-    bool isNestedRouting = false,
-  }) =>
-      PagePredict(
-        settings: settings,
-        unknownRoute: unknownRoute ?? DevEssentialPages.defaultUnknownRoute,
-      ).page();
+  void back<T>({
+    T? result,
+    bool canPop = true,
+    int times = 1,
+    String? id,
+  }) {
+    if (times < 1) {
+      times = 1;
+    }
 
-  List<Route<dynamic>> initialRouteGenerator(
-    String name, {
-    DevEssentialPage? unknownRoute,
-  }) =>
-      PagePredict(
-        settings: RouteSettings(name: name),
-        unknownRoute: unknownRoute ?? DevEssentialPages.defaultUnknownRoute,
-      ).initialRouteName();
+    if (times > 1) {
+      var count = 0;
+      return searchDelegate(id).backUntil((route) => count++ == times);
+    } else {
+      if (canPop) {
+        if (searchDelegate(id).canBack == true) {
+          return searchDelegate(id).back<T>(result);
+        }
+      } else {
+        return searchDelegate(id).back<T>(result);
+      }
+    }
+  }
 
-  DevEssentialNavigationObserver navigatorObserver({
-    bool isNestedRouting = false,
-  }) =>
-      DevEssentialNavigationObserver(
-        routing: routing,
-        isNestedRouting: isNestedRouting,
-      );
+  Future<T?>? off<T>(
+    DevEssentialPageBuilder page, {
+    bool? opaque,
+    DevEssentialTransition? transition,
+    Curve? curve,
+    bool? popGesture,
+    String? id,
+    String? routeName,
+    dynamic arguments,
+    bool fullscreenDialog = false,
+    bool preventDuplicates = true,
+    Duration? duration,
+    double Function(BuildContext context)? gestureWidth,
+  }) {
+    routeName ??= "/${page.runtimeType.toString()}";
+    routeName = _hookState.cleanRouteName(routeName);
+    if (preventDuplicates && routeName == currentRoute) {
+      return null;
+    }
+    return searchDelegate(id).off(
+      page,
+      opaque: opaque ?? true,
+      transition: transition,
+      curve: curve,
+      popGesture: popGesture,
+      id: id,
+      routeName: routeName,
+      arguments: arguments,
+      fullscreenDialog: fullscreenDialog,
+      preventDuplicates: preventDuplicates,
+      duration: duration,
+      gestureWidth: gestureWidth,
+    );
+  }
+
+  Future<T?> offUntil<T>(
+    DevEssentialPageBuilder page,
+    bool Function(DevEssentialPage) predicate, [
+    Object? arguments,
+    String? id,
+  ]) {
+    return searchDelegate(id).offUntil(
+      page,
+      predicate,
+      arguments,
+    );
+  }
+
+  Future<T?>? offAll<T>(
+    DevEssentialPageBuilder page, {
+    DevEssentialPageRoutePredicate? predicate,
+    bool? opaque,
+    bool? popGesture,
+    String? id,
+    String? routeName,
+    dynamic arguments,
+    bool fullscreenDialog = false,
+    DevEssentialTransition? transition,
+    Curve? curve,
+    Duration? duration,
+    double Function(BuildContext context)? gestureWidth,
+  }) {
+    routeName ??= "/${page.runtimeType.toString()}";
+    routeName = _hookState.cleanRouteName(routeName);
+    return searchDelegate(id).offAll<T>(
+      page,
+      predicate: predicate,
+      opaque: opaque ?? true,
+      popGesture: popGesture,
+      id: id,
+      arguments: arguments,
+      fullscreenDialog: fullscreenDialog,
+      transition: transition,
+      curve: curve,
+      duration: duration,
+      gestureWidth: gestureWidth,
+    );
+  }
 }

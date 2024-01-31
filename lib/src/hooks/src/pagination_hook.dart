@@ -57,6 +57,9 @@ class PaginationHookState
   }
 
   Future<void> performPagination() async {
+    if(isLoadMoreBeingCalled){
+      return;
+    }
     listLastItem = PaginableListLastItem.progressIndicator;
     isLoadMoreBeingCalled = true;
     updateState();

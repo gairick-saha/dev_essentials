@@ -18,4 +18,7 @@ extension NumExtension on num {
   double get percentageHeight => Dev.height * (this / 100);
 
   double get percentageWidth => Dev.width * (this / 100);
+
+  Object get convertBytestoGB =>
+      this == 0 ? 0 : (this / math.pow(1000, 3)).toStringAsFixed(2);
 }

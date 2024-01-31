@@ -11,6 +11,7 @@ class DevEssentialNetworkClient {
     this.onTokenExpired,
     this.defaultConnectTimeout = const Duration(milliseconds: 100000),
     this.defaultReceiveTimeout = const Duration(milliseconds: 100000),
+    this.globalHeaders,
   });
 
   final String? baseUrl;
@@ -18,6 +19,26 @@ class DevEssentialNetworkClient {
   final OnTokenExpiredCallback? onTokenExpired;
   final Duration defaultConnectTimeout;
   final Duration defaultReceiveTimeout;
+  final Map<String, dynamic>? globalHeaders;
+
+  DevEssentialNetworkClient copyWith({
+    String? baseUrl,
+    DevEssentialNetworkToken? token,
+    OnTokenExpiredCallback? onTokenExpired,
+    Duration? defaultConnectTimeout,
+    Duration? defaultReceiveTimeout,
+    Map<String, dynamic>? globalHeaders,
+  }) =>
+      DevEssentialNetworkClient(
+        baseUrl: baseUrl ?? this.baseUrl,
+        token: token ?? this.token,
+        onTokenExpired: onTokenExpired ?? this.onTokenExpired,
+        defaultConnectTimeout:
+            defaultConnectTimeout ?? this.defaultConnectTimeout,
+        defaultReceiveTimeout:
+            defaultReceiveTimeout ?? this.defaultReceiveTimeout,
+        globalHeaders: globalHeaders ?? this.globalHeaders,
+      );
 
   Dio get _client {
     final Dio dio = Dio();
@@ -34,6 +55,7 @@ class DevEssentialNetworkClient {
           _LoggingInterceptor(
             tokenInstance: token,
             onTokenExpired: onTokenExpired,
+            globalHeaders: globalHeaders,
           )
         ]);
     }
@@ -74,8 +96,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -118,8 +140,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -162,8 +184,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -202,8 +224,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -229,7 +251,7 @@ class DevEssentialNetworkClient {
       );
 
       DevEssentialNetworkDataRespone responseData =
-      DevEssentialNetworkDataRespone.empty();
+          DevEssentialNetworkDataRespone.empty();
 
       if (response.statusCode != null) {
         responseData.statusCode = response.statusCode!;
@@ -246,8 +268,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -290,8 +312,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -334,8 +356,8 @@ class DevEssentialNetworkClient {
 
       return responseData;
     } on FormatException catch (_) {
-      throw const FormatException('Unable to process the data');
-    } catch (e) {
+      rethrow;
+    } catch (_) {
       rethrow;
     }
   }
@@ -351,22 +373,28 @@ class DevEssentialNetworkClient {
     dynamic data,
     DevEssentialNetworkOptions? options,
   }) async {
-    final Response response = await _client.download(
-      url,
-      savePath,
-      onReceiveProgress: onReceiveProgress,
-      queryParameters: queryParameters,
-      cancelToken: cancelToken,
-      deleteOnError: deleteOnError,
-      lengthHeader: lengthHeader,
-      data: data,
-      options: options,
-    );
+    try {
+      final Response response = await _client.download(
+        url,
+        savePath,
+        onReceiveProgress: onReceiveProgress,
+        queryParameters: queryParameters,
+        cancelToken: cancelToken,
+        deleteOnError: deleteOnError,
+        lengthHeader: lengthHeader,
+        data: data,
+        options: options,
+      );
 
-    if (response.statusCode == 200) {
-      return savePath;
-    } else {
-      throw Exception('Unable to download the file');
+      if (response.statusCode == 200) {
+        return savePath;
+      } else {
+        throw Exception('Unable to download the file');
+      }
+    } on FormatException catch (_) {
+      rethrow;
+    } catch (_) {
+      rethrow;
     }
   }
 }

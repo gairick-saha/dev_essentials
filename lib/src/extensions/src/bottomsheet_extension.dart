@@ -1,7 +1,7 @@
 part of '../extensions.dart';
 
 extension BottomSheetExtension on DevEssential {
-  Future<T?> showBottomSheet<T>(
+  Future<T?> bottomSheet<T>(
     Widget bottomsheet, {
     Color? backgroundColor,
     double? elevation,
@@ -17,14 +17,17 @@ extension BottomSheetExtension on DevEssential {
     RouteSettings? settings,
     Duration? enterBottomSheetDuration,
     Duration? exitBottomSheetDuration,
+    Curve? curve,
+    BoxConstraints? constraints,
   }) {
     return Navigator.of(overlayContext!, rootNavigator: useRootNavigator)
         .push(DevEssentialModalBottomSheetRoute<T>(
       builder: (_) => bottomsheet,
       isPersistent: persistent,
-      theme: Theme.of(context),
+      theme: Theme.of(key.currentContext!),
       isScrollControlled: isScrollControlled,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierLabel: MaterialLocalizations.of(key.currentContext!)
+          .modalBarrierDismissLabel,
       backgroundColor: backgroundColor ?? Colors.transparent,
       elevation: elevation,
       shape: shape,
@@ -34,8 +37,12 @@ extension BottomSheetExtension on DevEssential {
       modalBarrierColor: barrierColor,
       settings: settings,
       enableDrag: enableDrag,
-      enterBottomSheetDuration: enterBottomSheetDuration ?? 250.milliseconds,
-      exitBottomSheetDuration: exitBottomSheetDuration ?? 200.milliseconds,
+      enterBottomSheetDuration:
+          enterBottomSheetDuration ?? const Duration(milliseconds: 250),
+      exitBottomSheetDuration:
+          exitBottomSheetDuration ?? const Duration(milliseconds: 200),
+      curve: curve,
+      constraints: constraints,
     ));
   }
 }

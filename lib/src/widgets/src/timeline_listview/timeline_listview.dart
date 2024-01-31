@@ -139,10 +139,11 @@ class TimelineListView extends StatelessWidget {
     if (legendText != null) {
       legendTextSpan = TextSpan(
         text: legendText,
-        style: legendTextStyle ??
-            Dev.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+        style: legendTextStyle,
+        // ??
+        //     Dev.textTheme.titleMedium?.copyWith(
+        //       fontWeight: FontWeight.w500,
+        //     ),
       );
 
       legendTextPainter = TextPainter(
@@ -171,7 +172,8 @@ class TimelineListView extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
             side: BorderSide(
-              color: lineColor ?? Dev.theme.colorScheme.primary,
+              color: lineColor ?? Colors.transparent,
+              //  ?? Dev.theme.colorScheme.primary,
               width: lineWidth,
             ),
           ),
@@ -181,7 +183,7 @@ class TimelineListView extends StatelessWidget {
             padding: legendTextPadding,
             child: Text.rich(
               legendTextSpan,
-              textScaleFactor: Dev.textScaleFactor,
+              // textScaleFactor: Dev.textScaleFactor,
               style: legendTextSpan.style,
             ),
           ),
@@ -263,7 +265,8 @@ class TimelineListView extends StatelessWidget {
           if (model.label != null) {
             final TextSpan textSpan = TextSpan(
               text: model.label,
-              style: labelStyle ?? Dev.theme.textTheme.labelMedium,
+              style: labelStyle,
+              //  ?? Dev.theme.textTheme.labelMedium,
             );
 
             textPainter = TextPainter(
@@ -308,7 +311,8 @@ class TimelineListView extends StatelessWidget {
                       iconSize: iconSize,
                       isFirst: isFirst,
                       isLast: isLast,
-                      lineColor: lineColor ?? Dev.theme.colorScheme.primary,
+                      lineColor: lineColor ?? Colors.transparent,
+                      //  ?? Dev.theme.colorScheme.primary,
                       lineWidth: lineWidth,
                       timelinewidth: timelineContainerwidth,
                       hasIcon: model.icon != null || model.imageUrl != null,
@@ -325,19 +329,19 @@ class TimelineListView extends StatelessWidget {
                             child: Image.network(
                               model.imageUrl!,
                               filterQuality: FilterQuality.high,
-                              loadingBuilder: (context, child,
-                                      loadingProgress) =>
-                                  loadingProgress == null
-                                      ? child
-                                      : LoadingIndictor(
-                                          color:
-                                              Dev.theme.colorScheme.secondary,
-                                          materialLoadingValue: (loadingProgress
-                                                      .expectedTotalBytes ??
-                                                  0) /
-                                              loadingProgress
-                                                  .cumulativeBytesLoaded,
-                                        ),
+                              loadingBuilder:
+                                  (context, child, loadingProgress) =>
+                                      loadingProgress == null
+                                          ? child
+                                          : LoadingIndictor(
+                                              // color:
+                                              // Dev.theme.colorScheme.secondary,
+                                              materialLoadingValue: (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      0) /
+                                                  loadingProgress
+                                                      .cumulativeBytesLoaded,
+                                            ),
                             ),
                           )
                         : model.icon != null

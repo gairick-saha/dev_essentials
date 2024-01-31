@@ -81,6 +81,9 @@ class DevEssentialReactiveFormTextfield<T>
     void Function(FocusNode focusNode)? focusListener,
   })  : _textController = controller,
         _obscureText = obscureText,
+        _maxLines = maxLines,
+        _minLines = minLines,
+        _maxLength = maxLength,
         _focusListener = focusListener,
         super(
           key: key,
@@ -174,10 +177,19 @@ class DevEssentialReactiveFormTextfield<T>
                       : SmartQuotesType.enabled),
               enableSuggestions: enableSuggestions,
               maxLengthEnforcement: maxLengthEnforcement,
-              maxLines: maxLines,
-              minLines: minLines,
+              maxLines:
+                  (formControlName?.toLowerCase() ?? '').contains('password')
+                      ? 1
+                      : state.maxLines,
+              minLines:
+                  (formControlName?.toLowerCase() ?? '').contains('password')
+                      ? 1
+                      : state.minLines,
               expands: expands,
-              maxLength: maxLength,
+              maxLength:
+                  (formControlName?.toLowerCase() ?? '').contains('password')
+                      ? null
+                      : state.maxLength,
               inputFormatters: inputFormatters,
               enabled: field.control.enabled,
               cursorWidth: cursorWidth,
@@ -221,6 +233,10 @@ class DevEssentialReactiveFormTextfield<T>
 
   final bool? _obscureText;
 
+  final int? _maxLines;
+  final int? _minLines;
+  final int? _maxLength;
+
   final void Function(FocusNode focusNode)? _focusListener;
 
   @override
@@ -232,6 +248,10 @@ class _DevEssentialReactiveTextFieldState<T>
     extends ReactiveFocusableFormFieldState<T, String> {
   late TextEditingController _textController;
   late bool _obscureText;
+
+  int? maxLines;
+  int? minLines;
+  int? maxLength;
 
   void togglePasswordVisibility() => setState(() {
         _obscureText = !_obscureText;
@@ -245,6 +265,25 @@ class _DevEssentialReactiveTextFieldState<T>
     super.initState();
     _initializeTextController();
     focusNode.addListener(() => currentWidget._focusListener?.call(focusNode));
+  }
+
+  void _initializeTextController() {
+    bool isPassword = ((currentWidget.formControlName ?? '')
+        .toLowerCase()
+        .contains('password'));
+    if (!isPassword) {
+      maxLines = currentWidget._maxLines;
+      minLines = currentWidget._minLines;
+      maxLength = currentWidget._maxLength;
+    }
+    final initialValue = value;
+    _textController = (currentWidget._textController != null)
+        ? currentWidget._textController!
+        : TextEditingController();
+    _obscureText = (currentWidget._obscureText != null)
+        ? currentWidget._obscureText!
+        : isPassword;
+    _textController.text = initialValue == null ? '' : initialValue.toString();
   }
 
   @override
@@ -279,18 +318,5 @@ class _DevEssentialReactiveTextFieldState<T>
     }
 
     return super.selectValueAccessor();
-  }
-
-  void _initializeTextController() {
-    final initialValue = value;
-    _textController = (currentWidget._textController != null)
-        ? currentWidget._textController!
-        : TextEditingController();
-    _obscureText = (currentWidget._obscureText != null)
-        ? currentWidget._obscureText!
-        : ((currentWidget.formControlName ?? '')
-            .toLowerCase()
-            .contains('password'));
-    _textController.text = initialValue == null ? '' : initialValue.toString();
   }
 }

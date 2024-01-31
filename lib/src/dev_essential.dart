@@ -1,4 +1,18 @@
-part 'dev_essential_interface.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+
+import '../dev_essentials.dart';
+import 'hooks/hooks.dart';
+
+abstract class _DevEssentialInterface {
+  bool isLogEnable = kDebugMode;
+
+  DevEssentialLogWriterCallback log = defaultLogWriterCallback;
+
+  DevEssentialHookState of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<InheritedDevEssentialRootApp>()!
+      .devEssentialHook;
+}
 
 class DevEssential extends _DevEssentialInterface {}
 

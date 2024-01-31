@@ -84,7 +84,6 @@ class PaginableSliverList extends StatelessWidget {
                           ),
                           child: Text(
                             'No more items',
-                            textScaleFactor: Dev.textScaleFactor,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),

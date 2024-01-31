@@ -1,5 +1,7 @@
 part of '../../widgets.dart';
 
+typedef ScrollableWrapper = _BuildBody;
+
 class _BuildInheritedScrollableBody extends InheritedWidget {
   const _BuildInheritedScrollableBody({
     required Widget child,
@@ -15,18 +17,18 @@ class _BuildInheritedScrollableBody extends InheritedWidget {
 class _BuildBody extends HookWidget {
   const _BuildBody({
     Key? key,
-    required this.childrens,
-    required this.onRefresh,
-    required this.scrollController,
-    required this.shrinkWrap,
-    required this.hasAppbar,
-    required this.physics,
-    required this.reverse,
-    required this.allowPagination,
-    required this.onPaginate,
+    required this.slivers,
+    this.onRefresh,
+    this.scrollController,
+    this.shrinkWrap = false,
+    this.hasAppbar = false,
+    this.physics,
+    this.reverse = false,
+    this.allowPagination = false,
+    this.onPaginate,
   }) : super(key: key);
 
-  final List<Widget> childrens;
+  final List<Widget> slivers;
   final Future<void> Function()? onRefresh;
   final ScrollController? scrollController;
   final bool shrinkWrap;
@@ -55,9 +57,15 @@ class _BuildBody extends HookWidget {
       );
     }
 
-    return _BuildInheritedScrollableBody(
-      paginationHookState: paginationHookState,
-      child: childWidget,
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overscroll) {
+        overscroll.disallowIndicator();
+        return true;
+      },
+      child: _BuildInheritedScrollableBody(
+        paginationHookState: paginationHookState,
+        child: childWidget,
+      ),
     );
   }
 
@@ -103,7 +111,7 @@ class _BuildBody extends HookWidget {
         scrollBehavior: const DevEssentialCustomScrollBehavior(),
         controller: scrollController,
         physics: physics,
-        slivers: childrens,
+        slivers: slivers,
         shrinkWrap: shrinkWrap,
         reverse: reverse,
       ),
