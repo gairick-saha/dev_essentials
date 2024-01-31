@@ -5,6 +5,7 @@ abstract class DevEssentialCustomTransition {
   Widget buildTransition(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,

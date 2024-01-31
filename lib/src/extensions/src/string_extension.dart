@@ -4,6 +4,8 @@ extension StringExt on String {
   Future<String?> get download async =>
       await DevEssentialUtility.downloadFile(this);
 
+  String? getMimeType() => lookupMimeType(this);
+
   void showToast({
     WrapAnimation? wrapAnimation,
     WrapAnimation? wrapToastAnimation,

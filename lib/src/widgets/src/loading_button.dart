@@ -62,7 +62,8 @@ class DevEssentialLoadingButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color defaultButtonColor = color ?? Dev.theme.colorScheme.primary;
+    final Color defaultButtonColor =
+        color ?? Theme.of(context).colorScheme.primary;
     final Color? defaultTextColor = textColor;
     final ValueNotifier<Color> buttonColor =
         useState<Color>(defaultButtonColor);
@@ -71,7 +72,7 @@ class DevEssentialLoadingButton extends HookWidget {
       defaultWidget: child ??
           Text(
             buttonText!,
-            textScaleFactor: Dev.textScaleFactor,
+            // textScaleFactor: Dev.textScaleFactor,
             style: buttonTextstyle?.copyWith(color: defaultTextColor),
           ),
       loadingWidget: loadingWidget ?? LoadingIndictor(color: defaultTextColor),

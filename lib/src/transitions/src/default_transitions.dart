@@ -4,6 +4,7 @@ class LeftToRightFadeTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -31,6 +32,7 @@ class RightToLeftFadeTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -71,6 +73,7 @@ class FadeInTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -86,6 +89,7 @@ class SlideDownTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -104,6 +108,7 @@ class SlideLeftTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -122,6 +127,7 @@ class SlideRightTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -140,6 +146,7 @@ class SlideTopTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -158,6 +165,7 @@ class ZoomInTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -173,6 +181,7 @@ class SizeTransitions {
   Widget buildTransitions(
     BuildContext context,
     Curve curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
@@ -194,6 +203,7 @@ class CircularRevealTransition {
   Widget buildTransitions(
     BuildContext context,
     Curve? curve,
+    Alignment? alignment,
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,

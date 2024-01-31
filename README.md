@@ -324,7 +324,9 @@ TimelineListView.builder(
                   ),
                 ],
               ),
-              textScaleFactor: Dev.textScaleFactor,
+              textScaler: TextScaler.linear(
+              Dev.deviceTextScaleFactor,
+            ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Dev.theme.textTheme.bodyMedium?.copyWith(
@@ -348,7 +350,9 @@ TimelineListView.builder(
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textScaleFactor: Dev.textScaleFactor,
+              textScaler: TextScaler.linear(
+              Dev.deviceTextScaleFactor,
+            ),
               style: Dev.theme.textTheme.bodyMedium?.copyWith(
                 color: AppColors.mediumGrey,
               ),
@@ -370,7 +374,9 @@ TimelineListView.builder(
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textScaleFactor: Dev.textScaleFactor,
+              textScaler: TextScaler.linear(
+              Dev.deviceTextScaleFactor,
+            ),
               style: Dev.theme.textTheme.bodyMedium?.copyWith(
                 color: AppColors.mediumGrey,
               ),

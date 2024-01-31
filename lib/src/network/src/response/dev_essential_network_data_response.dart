@@ -9,15 +9,15 @@ class DevEssentialNetworkDataRespone {
   });
 
   int? statusCode;
-  Object? data;
+  dynamic data;
   bool isSuccess;
-  Object? error;
+  dynamic error;
 
   factory DevEssentialNetworkDataRespone.empty() =>
       DevEssentialNetworkDataRespone(
         data: null,
         statusCode: null,
-        error: null,
+        error: "Something went wrong",
         isSuccess: false,
       );
 

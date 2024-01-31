@@ -1,14 +1,14 @@
 part of '../extensions.dart';
 
 extension ExtensionSnackbar on DevEssential {
-  DevEssentialSnackbarController showDefaultSnackbar({
-    Widget? title,
-    Widget? message,
-    String? titleText,
-    String? messageText,
+  DevEssentialSnackbarController rawSnackbar({
+    String? title,
+    String? message,
+    Widget? titleText,
+    Widget? messageText,
     Widget? icon,
     bool instantInit = true,
-    bool useAnimatedIcon = true,
+    bool shouldIconPulse = true,
     double? maxWidth,
     EdgeInsets margin = const EdgeInsets.all(0.0),
     EdgeInsets padding = const EdgeInsets.all(16),
@@ -20,7 +20,7 @@ extension ExtensionSnackbar on DevEssential {
     List<BoxShadow>? boxShadows,
     Gradient? backgroundGradient,
     Widget? mainButton,
-    DevEssentialSnackbarOnTapCallback? onTap,
+    OnSnackbarTap? onTap,
     Duration? duration = const Duration(seconds: 3),
     bool isDismissible = true,
     DismissDirection? dismissDirection,
@@ -28,33 +28,33 @@ extension ExtensionSnackbar on DevEssential {
     AnimationController? progressIndicatorController,
     Color? progressIndicatorBackgroundColor,
     Animation<Color>? progressIndicatorValueColor,
-    DevEssentialSnackbarPosition position = DevEssentialSnackbarPosition.BOTTOM,
-    DevEssentialSnackbarStyle style = DevEssentialSnackbarStyle.FLOATING,
+    SnackPosition snackPosition = SnackPosition.bottom,
+    SnackStyle snackStyle = SnackStyle.floating,
     Curve forwardAnimationCurve = Curves.easeOutCirc,
     Curve reverseAnimationCurve = Curves.easeOutCirc,
     Duration animationDuration = const Duration(seconds: 1),
-    DevEssentialSnackbarStatusCallback? snackbarStatus,
-    double blurValue = 0.0,
-    double overlayBlurValue = 0.0,
+    SnackbarStatusCallback? snackbarStatus,
+    double barBlur = 0.0,
+    double overlayBlur = 0.0,
     Color? overlayColor,
-    DevEssentialFormBuilder? userInputForm,
+    Form? userInputForm,
   }) {
-    final DevEssentialSnackbar newSnackbar = DevEssentialSnackbar(
-      status: snackbarStatus,
+    final getSnackBar = DevEssentialSnackBar(
+      snackbarStatus: snackbarStatus,
       title: title,
       message: message,
       titleText: titleText,
       messageText: messageText,
-      position: position,
+      snackPosition: snackPosition,
       borderRadius: borderRadius,
       margin: margin,
-      padding: padding,
       duration: duration,
-      blurValue: blurValue,
+      barBlur: barBlur,
       backgroundColor: backgroundColor,
       icon: icon,
-      useAnimatedIcon: useAnimatedIcon,
+      shouldIconPulse: shouldIconPulse,
       maxWidth: maxWidth,
+      padding: padding,
       borderColor: borderColor,
       borderWidth: borderWidth,
       leftBarIndicatorColor: leftBarIndicatorColor,
@@ -68,45 +68,45 @@ extension ExtensionSnackbar on DevEssential {
       progressIndicatorController: progressIndicatorController,
       progressIndicatorBackgroundColor: progressIndicatorBackgroundColor,
       progressIndicatorValueColor: progressIndicatorValueColor,
-      style: style,
+      snackStyle: snackStyle,
       forwardAnimationCurve: forwardAnimationCurve,
       reverseAnimationCurve: reverseAnimationCurve,
       animationDuration: animationDuration,
-      overlayBlurValue: overlayBlurValue,
+      overlayBlur: overlayBlur,
       overlayColor: overlayColor,
       userInputForm: userInputForm,
     );
 
-    final DevEssentialSnackbarController controller =
-        DevEssentialSnackbarController(newSnackbar);
+    final controller = DevEssentialSnackbarController(getSnackBar);
 
     if (instantInit) {
       controller.show();
     } else {
-      SchedulerBinding.instance.addPostFrameCallback((_) => controller.show());
+      Engine.instance.addPostFrameCallback((_) {
+        controller.show();
+      });
     }
     return controller;
   }
 
-  DevEssentialSnackbarController showCustomSnackbar(
-      DevEssentialSnackbar snackbar) {
-    final DevEssentialSnackbarController controller =
-        DevEssentialSnackbarController(snackbar);
+  DevEssentialSnackbarController showSnackbar(DevEssentialSnackBar snackbar) {
+    final controller = DevEssentialSnackbarController(snackbar);
     controller.show();
     return controller;
   }
 
-  DevEssentialSnackbarController showSnackbar({
-    required String titleText,
-    required String messageText,
+  DevEssentialSnackbarController snackbar(
+    String title,
+    String message, {
     Color? colorText,
+    Color? iconColor,
     Duration? duration = const Duration(seconds: 3),
     bool instantInit = true,
-    DevEssentialSnackbarPosition? position,
-    Widget? title,
-    Widget? message,
+    SnackPosition? snackPosition,
+    Widget? titleText,
+    Widget? messageText,
     Widget? icon,
-    bool? useAnimatedIcon,
+    bool? shouldIconPulse,
     double? maxWidth,
     EdgeInsets? margin,
     EdgeInsets? padding,
@@ -118,75 +118,84 @@ extension ExtensionSnackbar on DevEssential {
     List<BoxShadow>? boxShadows,
     Gradient? backgroundGradient,
     TextButton? mainButton,
-    DevEssentialSnackbarOnTapCallback? onTap,
+    OnSnackbarTap? onTap,
+    OnSnackbarHover? onHover,
     bool? isDismissible,
     bool? showProgressIndicator,
     DismissDirection? dismissDirection,
     AnimationController? progressIndicatorController,
     Color? progressIndicatorBackgroundColor,
     Animation<Color>? progressIndicatorValueColor,
-    DevEssentialSnackbarStyle? style,
+    SnackStyle? snackStyle,
     Curve? forwardAnimationCurve,
     Curve? reverseAnimationCurve,
     Duration? animationDuration,
-    double? blurValue,
-    double? overlayBlurValue,
-    DevEssentialSnackbarStatusCallback? status,
+    double? barBlur,
+    double? overlayBlur,
+    SnackbarStatusCallback? snackbarStatus,
     Color? overlayColor,
-    DevEssentialFormBuilder? userInputForm,
+    Form? userInputForm,
   }) {
-    backgroundColor ??= Dev.theme.colorScheme.primary.withOpacity(0.4);
-    blurValue ??= 7.0;
+    final getSnackBar = DevEssentialSnackBar(
+        snackbarStatus: snackbarStatus,
+        titleText: titleText ??
+            Text(
+              title,
+              style: TextStyle(
+                color: colorText ?? iconColor ?? Colors.black,
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+              ),
+            ),
+        messageText: messageText ??
+            Text(
+              message,
+              style: TextStyle(
+                color: colorText ?? iconColor ?? Colors.black,
+                fontWeight: FontWeight.w300,
+                fontSize: 14,
+              ),
+            ),
+        snackPosition: snackPosition ?? SnackPosition.top,
+        borderRadius: borderRadius ?? 15,
+        margin: margin ?? const EdgeInsets.symmetric(horizontal: 10),
+        duration: duration,
+        barBlur: barBlur ?? 7.0,
+        backgroundColor: backgroundColor ?? Colors.grey.withOpacity(0.2),
+        icon: icon,
+        shouldIconPulse: shouldIconPulse ?? true,
+        maxWidth: maxWidth,
+        padding: padding ?? const EdgeInsets.all(16),
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+        leftBarIndicatorColor: leftBarIndicatorColor,
+        boxShadows: boxShadows,
+        backgroundGradient: backgroundGradient,
+        mainButton: mainButton,
+        onTap: onTap,
+        onHover: onHover,
+        isDismissible: isDismissible ?? true,
+        dismissDirection: dismissDirection,
+        showProgressIndicator: showProgressIndicator ?? false,
+        progressIndicatorController: progressIndicatorController,
+        progressIndicatorBackgroundColor: progressIndicatorBackgroundColor,
+        progressIndicatorValueColor: progressIndicatorValueColor,
+        snackStyle: snackStyle ?? SnackStyle.floating,
+        forwardAnimationCurve: forwardAnimationCurve ?? Curves.easeOutCirc,
+        reverseAnimationCurve: reverseAnimationCurve ?? Curves.easeOutCirc,
+        animationDuration: animationDuration ?? const Duration(seconds: 1),
+        overlayBlur: overlayBlur ?? 0.0,
+        overlayColor: overlayColor ?? Colors.transparent,
+        userInputForm: userInputForm);
 
-    final DevEssentialSnackbar getSnackBar = DevEssentialSnackbar(
-      status: status,
-      titleText: titleText,
-      title: title,
-      message: message,
-      messageText: messageText,
-      position: position ?? DevEssentialSnackbarPosition.BOTTOM,
-      borderRadius: borderRadius ?? 15,
-      margin: margin ??
-          EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: Dev.mediaQuery.viewPadding.bottom + 12.0,
-          ),
-      padding: padding ?? const EdgeInsets.all(16),
-      duration: duration,
-      blurValue: blurValue,
-      backgroundColor: backgroundColor,
-      icon: icon,
-      useAnimatedIcon: useAnimatedIcon ?? true,
-      maxWidth: maxWidth,
-      borderColor: borderColor,
-      borderWidth: borderWidth ?? 1.0,
-      leftBarIndicatorColor: leftBarIndicatorColor,
-      boxShadows: boxShadows,
-      backgroundGradient: backgroundGradient,
-      mainButton: mainButton,
-      onTap: onTap,
-      isDismissible: isDismissible ?? true,
-      dismissDirection: dismissDirection,
-      showProgressIndicator: showProgressIndicator ?? false,
-      progressIndicatorController: progressIndicatorController,
-      progressIndicatorBackgroundColor: progressIndicatorBackgroundColor,
-      progressIndicatorValueColor: progressIndicatorValueColor,
-      style: style ?? DevEssentialSnackbarStyle.FLOATING,
-      forwardAnimationCurve: forwardAnimationCurve ?? Curves.easeOutCirc,
-      reverseAnimationCurve: reverseAnimationCurve ?? Curves.easeOutCirc,
-      animationDuration: animationDuration ?? const Duration(seconds: 1),
-      overlayBlurValue: overlayBlurValue ?? 0.0,
-      overlayColor: overlayColor ?? Colors.transparent,
-      userInputForm: userInputForm,
-    );
-
-    final DevEssentialSnackbarController controller =
-        DevEssentialSnackbarController(getSnackBar);
+    final controller = DevEssentialSnackbarController(getSnackBar);
 
     if (instantInit) {
       controller.show();
     } else {
-      SchedulerBinding.instance.addPostFrameCallback((_) => controller.show());
+      Engine.instance.addPostFrameCallback((_) {
+        controller.show();
+      });
     }
     return controller;
   }

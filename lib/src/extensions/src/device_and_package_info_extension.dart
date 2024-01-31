@@ -4,29 +4,44 @@ extension DeviceAndPackageInfoExtension on DevEssential {
   Future<PackageInfo> getPackageInfo() async =>
       await PackageInfo.fromPlatform();
 
-  Future<Map<String, dynamic>?> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  DeviceInfoPlugin get deviceInfo => DeviceInfoPlugin();
 
+  Future<Map<String, dynamic>?> getDeviceInfo() async {
     if (kIsWeb) {
-      WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
-      return webBrowserInfo.data;
+      WebBrowserInfo info = await webBrowserInfo;
+      return info.data;
     } else if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      return androidInfo.data;
+      AndroidDeviceInfo info = await androidInfo;
+      return info.data;
     } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      return iosInfo.data;
+      IosDeviceInfo info = await iosInfo;
+      return info.data;
     } else if (Platform.isWindows) {
-      WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo;
-      return windowsInfo.data;
+      WindowsDeviceInfo info = await windowsInfo;
+      return info.data;
     } else if (Platform.isMacOS) {
-      MacOsDeviceInfo macOsDeviceInfo = await deviceInfo.macOsInfo;
-      return macOsDeviceInfo.data;
+      MacOsDeviceInfo info = await macOsInfo;
+      return info.data;
     } else if (Platform.isLinux) {
-      LinuxDeviceInfo linuxDeviceInfo = await deviceInfo.linuxInfo;
-      return linuxDeviceInfo.data;
+      LinuxDeviceInfo info = await linuxInfo;
+      return info.data;
     }
 
     return null;
   }
+
+  Future<AndroidDeviceInfo> get androidInfo async =>
+      await deviceInfo.androidInfo;
+
+  Future<IosDeviceInfo> get iosInfo async => await deviceInfo.iosInfo;
+
+  Future<WebBrowserInfo> get webBrowserInfo async =>
+      await deviceInfo.webBrowserInfo;
+
+  Future<WindowsDeviceInfo> get windowsInfo async =>
+      await deviceInfo.windowsInfo;
+
+  Future<MacOsDeviceInfo> get macOsInfo async => await deviceInfo.macOsInfo;
+
+  Future<LinuxDeviceInfo> get linuxInfo async => await deviceInfo.linuxInfo;
 }

@@ -18,6 +18,23 @@ class DevEssentialNetworkToken {
         refresh: refresh ?? this.refresh,
       );
 
+  factory DevEssentialNetworkToken.fromJson(Map<String, dynamic> json) =>
+      DevEssentialNetworkToken(
+        access: json['accessToken'],
+        refresh: json['refreshToken'],
+      );
+
+  DevEssentialNetworkToken copyWithfromJson(Map<String, dynamic> json) =>
+      copyWith(
+        access: json['accessToken'] ?? access,
+        refresh: json['refreshToken'] ?? refresh,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'accessToken': access,
+        'refreshToken': refresh,
+      };
+
   String get token => 'Bearer $access';
 
   @override

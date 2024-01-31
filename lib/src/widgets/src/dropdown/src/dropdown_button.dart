@@ -1230,7 +1230,7 @@ class DevEssentialDropdownButtonState<T>
   void callTap() => _handleTap();
 
   double get _denseButtonHeight {
-    final double textScaleFactor = MediaQuery.textScaleFactorOf(context);
+    final double textScaleFactor = Dev.deviceTextScaleFactor;
     final double fontSize = _textStyle!.fontSize ??
         Theme.of(context).textTheme.titleMedium!.fontSize!;
     final double scaledFontSize = textScaleFactor * fontSize;
@@ -1378,7 +1378,7 @@ class DevEssentialDropdownButtonState<T>
                 if (widget.isExpanded)
                   Expanded(child: innerItemsWidget)
                 else
-                  innerItemsWidget,
+                  Flexible(child: innerItemsWidget),
                 IconTheme(
                   data: IconThemeData(
                     color: _iconColor,

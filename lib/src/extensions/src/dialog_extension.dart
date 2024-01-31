@@ -1,30 +1,26 @@
 part of '../extensions.dart';
 
 extension DialogExtension on DevEssential {
-  /// Show a dialog.
-  /// You can pass a [transitionDuration] and/or [transitionCurve],
-  /// overriding the defaults when the dialog shows up and closes.
-  /// When the dialog closes, uses those animations in reverse.
   Future<T?> dialog<T>(
-    Widget widget, {
+    WidgetBuilder widget, {
     bool barrierDismissible = true,
     Color? barrierColor,
     bool useSafeArea = true,
-    Object? navigatorKey,
+    GlobalKey<NavigatorState>? navigatorKey,
     Object? arguments,
     Duration? transitionDuration,
     Curve? transitionCurve,
     String? name,
     RouteSettings? routeSettings,
+    String? id,
   }) {
     assert(debugCheckHasMaterialLocalizations(context));
 
     final theme = Theme.of(context);
     return generalDialog<T>(
-      pageBuilder: (buildContext, animation, secondaryAnimation) {
-        final pageChild = widget;
+      pageBuilder: (context, animation, secondaryAnimation) {
         Widget dialog = Builder(builder: (context) {
-          return Theme(data: theme, child: pageChild);
+          return Theme(data: theme, child: widget.call(context));
         });
         if (useSafeArea) {
           dialog = SafeArea(child: dialog);
@@ -45,49 +41,45 @@ extension DialogExtension on DevEssential {
         );
       },
       navigatorKey: navigatorKey,
-      routeSettings: routeSettings ??
-          RouteSettings(
-            arguments: arguments,
-            name: name,
-          ),
+      routeSettings:
+          routeSettings ?? RouteSettings(arguments: arguments, name: name),
+      id: id,
     );
   }
 
-  /// Api from showGeneralDialog with no context
-  Future<T?> generalDialog<T>({
-    required RoutePageBuilder pageBuilder,
-    bool barrierDismissible = false,
-    String? barrierLabel,
-    Color barrierColor = const Color(0x80000000),
-    Duration transitionDuration = const Duration(milliseconds: 200),
-    RouteTransitionsBuilder? transitionBuilder,
-    Object? navigatorKey,
-    RouteSettings? routeSettings,
-  }) {
+  Future<T?> generalDialog<T>(
+      {required RoutePageBuilder pageBuilder,
+      bool barrierDismissible = false,
+      String? barrierLabel,
+      Color barrierColor = const Color(0x80000000),
+      Duration transitionDuration = const Duration(milliseconds: 200),
+      RouteTransitionsBuilder? transitionBuilder,
+      GlobalKey<NavigatorState>? navigatorKey,
+      RouteSettings? routeSettings,
+      String? id}) {
     assert(!barrierDismissible || barrierLabel != null);
-    // final nav = _global(navigatorKey).currentState!.of(
-    //       overlayContext!,
-    //       rootNavigator: true,
-    //     ); //overlay context will always return the root navigator
-    return _global(navigatorKey).currentState!.push<T>(
-          DevEssentialDialogRoute<T>(
-            pageBuilder: pageBuilder,
-            barrierDismissible: barrierDismissible,
-            barrierLabel: barrierLabel,
-            barrierColor: barrierColor,
-            transitionDuration: transitionDuration,
-            transitionBuilder: transitionBuilder,
-            settings: routeSettings,
-          ),
-        );
+    final key = navigatorKey ?? Dev.nestedKey(id)?.navigatorKey;
+    final nav =
+        key?.currentState ?? Navigator.of(overlayContext!, rootNavigator: true);
+    return nav.push<T>(
+      DevEssentialDialogRoute<T>(
+        pageBuilder: pageBuilder,
+        barrierDismissible: barrierDismissible,
+        barrierLabel: barrierLabel,
+        barrierColor: barrierColor,
+        transitionDuration: transitionDuration,
+        transitionBuilder: transitionBuilder,
+        settings: routeSettings,
+      ),
+    );
   }
 
-  /// Custom UI Dialog.
   Future<T?> defaultDialog<T>({
     String title = "Alert",
     EdgeInsetsGeometry? titlePadding,
     TextStyle? titleStyle,
     Widget? content,
+    String? id,
     EdgeInsetsGeometry? contentPadding,
     VoidCallback? onConfirm,
     VoidCallback? onCancel,
@@ -103,17 +95,13 @@ extension DialogExtension on DevEssential {
     Color? backgroundColor,
     bool barrierDismissible = true,
     Color? buttonColor,
-    String middleText = "Dialog made in 3 lines of code",
+    String middleText = "\n",
     TextStyle? middleTextStyle,
     double radius = 20.0,
-    //   ThemeData themeData,
     List<Widget>? actions,
-
-    // onWillPop Scope
-    WillPopCallback? onWillPop,
-
-    // the navigator used to push the dialog
-    Object? navigatorKey,
+    bool canPop = true,
+    PopInvokedCallback? onPopInvoked,
+    GlobalKey<NavigatorState>? navigatorKey,
   }) {
     var leanCancel = onCancel != null || textCancel != null;
     var leanConfirm = onConfirm != null || textConfirm != null;
@@ -132,7 +120,7 @@ extension DialogExtension on DevEssential {
                     color: buttonColor ?? theme.colorScheme.secondary,
                     width: 2,
                     style: BorderStyle.solid),
-                borderRadius: BorderRadius.circular(100)),
+                borderRadius: BorderRadius.circular(radius)),
           ),
           onPressed: () {
             onCancel?.call();
@@ -155,7 +143,7 @@ extension DialogExtension on DevEssential {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               backgroundColor: buttonColor ?? theme.colorScheme.secondary,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)),
+                  borderRadius: BorderRadius.circular(radius)),
             ),
             child: Text(
               textConfirm ?? "Ok",
@@ -171,7 +159,6 @@ extension DialogExtension on DevEssential {
     Widget baseAlertDialog = AlertDialog(
       titlePadding: titlePadding ?? const EdgeInsets.all(8),
       contentPadding: contentPadding ?? const EdgeInsets.all(8),
-
       backgroundColor: backgroundColor ?? theme.dialogBackgroundColor,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius))),
@@ -196,19 +183,18 @@ extension DialogExtension on DevEssential {
           )
         ],
       ),
-      // actions: actions, // ?? <Widget>[cancelButton, confirmButton],
       buttonPadding: EdgeInsets.zero,
     );
 
     return dialog<T>(
-      onWillPop != null
-          ? WillPopScope(
-              onWillPop: onWillPop,
-              child: baseAlertDialog,
-            )
-          : baseAlertDialog,
+      (context) => PopScope(
+        canPop: canPop,
+        onPopInvoked: onPopInvoked,
+        child: baseAlertDialog,
+      ),
       barrierDismissible: barrierDismissible,
       navigatorKey: navigatorKey,
+      id: id,
     );
   }
 }

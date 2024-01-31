@@ -3,7 +3,7 @@ part of '../routes.dart';
 class DevEssentialPages {
   static DevEssentialPage defaultUnknownRoute = DevEssentialPage(
     name: '/404NotFound',
-    builder: (context, arguments) => const Scaffold(
+    page: (context, arguments) => const Scaffold(
       body: Center(
         child: Text("Page not found."),
       ),
@@ -11,32 +11,30 @@ class DevEssentialPages {
   );
 
   static List<DevEssentialPage> getPages(
-    List<DevEssentialPage>? userDefinedPages, {
+    List<DevEssentialPage> userDefinedPages, {
     SplashConfig? splashConfig,
-  }) {
-    List<DevEssentialPage> defaultPages = [
-      DevEssentialPage(
-        name: _DevEssentialPaths.root,
-        builder: (context, arguments) => BlocProvider<SplashCubit>(
-          create: (context) {
-            SplashCubit cubit = SplashCubit(
-              splashConfig: splashConfig ??
-                  SplashConfig(
-                    routeAfterSplash: (BuildContext splashContext) async =>
-                        userDefinedPages?.first.name,
-                    splashDuration: 3.seconds,
-                  ),
-            );
-            cubit.initSplash();
-            return cubit;
-          },
-          child: const SplashView(),
+  }) =>
+      [
+        DevEssentialPage(
+          name: _DevEssentialPaths.root,
+          page: (_, __) => const RootView(),
+          participatesInRootNavigator: true,
+          preventDuplicates: true,
+          children: [
+            if (splashConfig != null)
+              DevEssentialPage(
+                name: _DevEssentialPaths.splash,
+                page: (context, arguments) => BlocProvider<SplashCubit>(
+                  create: (context) {
+                    SplashCubit cubit = SplashCubit(splashConfig: splashConfig);
+                    cubit.initSplash();
+                    return cubit;
+                  },
+                  child: const SplashView(),
+                ),
+              ),
+            ...userDefinedPages,
+          ],
         ),
-      ),
-    ];
-    if (userDefinedPages != null) {
-      defaultPages.addAll(userDefinedPages);
-    }
-    return defaultPages;
-  }
+      ];
 }

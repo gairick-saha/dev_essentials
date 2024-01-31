@@ -5,7 +5,7 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
     Key? key,
     this.scaffoldKey,
     this.appBar,
-    this.slivers = const [],
+    this.slivers,
     this.floatingActionButtonLocation,
     this.floatingActionButton,
     this.onRefresh,
@@ -13,27 +13,28 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
     this.color,
     this.bottomBar,
     this.extendBodyBehindAppBar = false,
-    this.onWillPop,
     this.physics,
     this.bottomBarcolor,
     this.elevation,
     this.shape,
     this.clipBehavior,
     this.notchMargin = 4.0,
-    this.shrinkWrap = false,
+    this.shrinkWrap,
     this.isLoading = false,
-    this.reverse = false,
+    this.reverse,
     this.drawer,
     this.endDrawer,
     this.onDrawerChanged,
     this.onEndDrawerChanged,
-    this.allowPagination = false,
+    this.allowPagination,
     this.onPaginate,
+    this.canPop = true,
+    this.onPopInvoked,
   }) : super(key: key);
 
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final PreferredSizeWidget? appBar;
-  final List<Widget> slivers;
+  final List<Widget>? slivers;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? floatingActionButton;
   final Future<void> Function()? onRefresh;
@@ -41,7 +42,6 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
   final Color? color;
   final Widget? bottomBar;
   final bool extendBodyBehindAppBar;
-  final Future<bool> Function()? onWillPop;
   final ScrollPhysics? physics;
   final bool isLoading;
   final Color? bottomBarcolor;
@@ -49,14 +49,16 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
   final NotchedShape? shape;
   final Clip? clipBehavior;
   final double notchMargin;
-  final bool shrinkWrap;
-  final bool reverse;
+  final bool? shrinkWrap;
+  final bool? reverse;
   final Widget? drawer;
   final Widget? endDrawer;
   final ValueChanged<bool>? onDrawerChanged;
   final ValueChanged<bool>? onEndDrawerChanged;
-  final bool allowPagination;
+  final bool? allowPagination;
   final OnPaginateCallback? onPaginate;
+  final bool canPop;
+  final PopInvokedCallback? onPopInvoked;
 
   static PaginationHookState? of(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<_BuildInheritedScrollableBody>()
@@ -64,8 +66,9 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onWillPop ?? () async => true,
+    return PopScope(
+      canPop: canPop,
+      onPopInvoked: onPopInvoked,
       child: KeyboardDismisser(
         gestures: const [
           GestureType.onTap,
@@ -92,27 +95,21 @@ class ScrollableScaffoldWrapper extends StatelessWidget {
                   notchMargin: notchMargin,
                   child: bottomBar,
                 ),
-          body: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overscroll) {
-              overscroll.disallowIndicator();
-              return true;
-            },
-            child: isLoading
-                ? const Center(
-                    child: LoadingIndictor(),
-                  )
-                : _BuildBody(
-                    childrens: slivers,
-                    onRefresh: onRefresh,
-                    scrollController: scrollController,
-                    shrinkWrap: shrinkWrap,
-                    hasAppbar: appBar == null,
-                    physics: physics,
-                    reverse: reverse,
-                    allowPagination: allowPagination,
-                    onPaginate: onPaginate,
-                  ),
-          ),
+          body: isLoading
+              ? const Center(
+                  child: LoadingIndictor(),
+                )
+              : _BuildBody(
+                  slivers: slivers ?? [],
+                  onRefresh: onRefresh,
+                  scrollController: scrollController,
+                  shrinkWrap: shrinkWrap ?? false,
+                  hasAppbar: appBar == null,
+                  physics: physics,
+                  reverse: reverse ?? false,
+                  allowPagination: allowPagination ?? false,
+                  onPaginate: onPaginate,
+                ),
         ),
       ),
     );

@@ -1,47 +1,34 @@
 part of '../extensions.dart';
 
 extension DevEssentialExtension on DevEssential {
-  DevEssentialHookState of(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<InheritedDevEssentialRootApp>()!
-      .devEssentialHook;
+  void print(dynamic message, {String? name}) =>
+      defaultLogWriterCallback(message, name: name);
 
-  void print(dynamic message, {String? name}) {
-    if (kDebugMode) {
-      log((message).toString(), name: name ?? 'DevEssential');
-    }
-  }
-
-  WidgetsBinding get widgetsBinding => Engine.widgetsBinding;
+  WidgetsBinding get engine => Engine.instance;
 
   SchedulerBinding get schedulerBinding => Engine.schedulerBinding;
 
   Future<String?> downloadFile(String url) async => await url.download;
 
-  static final DevEssentialHookState _hookState =
-      DevEssentialHookState.instance;
+  Future<void> forceAppUpdate() async => await engine.performReassemble();
 
-  bool get defaultPopGesture => _hookState.defaultPopGesture;
+  DevEssentialHookState get _hookState => DevEssentialHookState.instance;
 
-  bool get defaultOpaqueRoute => _hookState.defaultOpaqueRoute;
+  DevEssentialAppConfigData get _appConfig => _hookState.config;
 
-  DevEssentialTransition? get defaultTransition => _hookState.defaultTransition;
+  BuildContext get context => key.currentContext!;
 
-  Duration get defaultTransitionDuration =>
-      _hookState.defaultTransitionDuration;
+  BuildContext? get overlayContext {
+    BuildContext? overlay;
+    key.currentState?.overlay?.context.visitChildElements((element) {
+      overlay = element;
+    });
+    return overlay;
+  }
 
-  Curve get defaultTransitionCurve => _hookState.defaultTransitionCurve;
+  FocusNode? get focusScope => FocusManager.instance.primaryFocus;
 
-  Curve get defaultDialogTransitionCurve =>
-      _hookState.defaultDialogTransitionCurve;
-
-  Duration get defaultDialogTransitionDuration =>
-      _hookState.defaultDialogTransitionDuration;
-
-  DevEssentialCustomTransition? get customTransition =>
-      _hookState.customTransition;
-
-  set customTransition(DevEssentialCustomTransition? newTransition) =>
-      _hookState.customTransition = newTransition;
+  Color get randomColor => DevEssentialUtility.getRandomColor();
 
   TextDirection get textDirection =>
       intl.Bidi.isRtlLanguage(Localizations.localeOf(context).languageCode)

@@ -7,26 +7,27 @@ class SplashConfig {
     this.logoPadding,
     this.showVersionNumber = true,
     this.backgroundColor,
-    this.backgroundGradient,
     this.foregroundColor,
     this.darkBackgroundColor,
-    this.darkBackgroundGradient,
     this.darkForegroundColor,
+    this.backgroundGradient,
     this.splashDuration,
     this.customUiBuilder,
     required this.routeAfterSplash,
-  });
+  }) : assert(
+          backgroundGradient == null || backgroundColor == null,
+          'Either the backgroundGradient or the backgroundColor can be provided',
+        );
 
   final String? logoPath;
   final Size? logoSize;
   final EdgeInsetsGeometry? logoPadding;
   final bool showVersionNumber;
   final Color? backgroundColor;
-  final Gradient? backgroundGradient;
   final Color? foregroundColor;
   final Color? darkBackgroundColor;
-  final Gradient? darkBackgroundGradient;
   final Color? darkForegroundColor;
+  final Gradient? backgroundGradient;
   final Duration? splashDuration;
   final SplashUIBuilder? customUiBuilder;
   final OnSplashInitCallback routeAfterSplash;

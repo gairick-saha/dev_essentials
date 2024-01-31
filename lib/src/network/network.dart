@@ -14,3 +14,4 @@ part 'src/dev_essential_network_client.dart';
 typedef DevEssentialNetworkOptions = Options;
 typedef DevEssentialNetworkCancelToken = CancelToken;
 typedef DevEssentialNetworkProgressCallback = ProgressCallback;
+typedef DevEssentialNetworkMultipartFile = MultipartFile;

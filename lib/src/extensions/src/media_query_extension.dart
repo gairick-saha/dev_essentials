@@ -1,18 +1,23 @@
 part of '../extensions.dart';
 
-extension MediaQueryAndThemeExtension on DevEssential {
-  static final DevEssentialHookState _hookState =
-      DevEssentialHookState.instance;
+extension MediaQueryExtension on DevEssential {
+  PlatformDispatcher get window => engine.platformDispatcher;
 
-  BuildContext get context => key.currentContext!;
+  double get devicePixelRatio => window.implicitView!.devicePixelRatio;
 
-  BuildContext? get overlayContext {
-    BuildContext? overlay;
-    key.currentState?.overlay?.context.visitChildElements((element) {
-      overlay = element;
-    });
-    return overlay;
-  }
+  double get deviceStatusBarHeight => window.implicitView!.padding.top;
+
+  double get deviceBottomBarHeight => window.implicitView!.padding.bottom;
+
+  double get deviceTextScaleFactor => window.textScaleFactor;
+
+  Size get deviceSize => window.implicitView!.physicalSize / devicePixelRatio;
+
+  double get deviceWidth => deviceSize.width;
+
+  double get deviceHeight => deviceSize.height;
+
+  bool get isDeviceDarkMode => (window.platformBrightness == Brightness.dark);
 
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
@@ -30,44 +35,36 @@ extension MediaQueryAndThemeExtension on DevEssential {
 
   EdgeInsets get viewPadding => mediaQuery.viewPadding;
 
-  double get textScaleFactor => mediaQuery.textScaleFactor;
+  double textScaleFactor(double fontSize) =>
+      mediaQuery.textScaler.scale(fontSize);
+
+  TextScaler get textScaler => TextScaler.linear(deviceTextScaleFactor);
+
+  double get pixelRatio => mediaQuery.devicePixelRatio;
 
   FocusNode? get focusScope => FocusManager.instance.primaryFocus;
 
-  void setTheme(ThemeData themeData) => _hookState.changeThemeData(themeData);
-
-  void setThemeMode(ThemeMode themeMode) =>
-      _hookState.changeThemeMode(themeMode);
-
-  ThemeData get theme => _hookState.theme;
-
-  TextTheme get textTheme => theme.textTheme;
-
-  bool get isDarkMode => theme.brightness == Brightness.dark;
-
-  Color? get iconColor => theme.iconTheme.color;
-
   FlutterView get view => View.of(context);
 
-  Locale? get deviceLocale => view.platformDispatcher.locale;
+  Locale? get viewLocale => view.platformDispatcher.locale;
 
-  double get pixelRatio => view.devicePixelRatio;
+  double get viewPixelRatio => view.devicePixelRatio;
 
-  Size get physicalDeviceSize => view.physicalSize / pixelRatio;
+  Size get viewDeviceSize => view.physicalSize / pixelRatio;
 
-  double get physicalDevicewidth => physicalDeviceSize.width;
+  double get viewDevicewidth => viewDeviceSize.width;
 
-  double get physicalDeviceheight => physicalDeviceSize.height;
+  double get viewDeviceheight => viewDeviceSize.height;
 
-  double get physicalDeviceStatusBarHeight => view.padding.top;
+  double get viewDeviceStatusBarHeight => view.padding.top;
 
-  double get physicalDeviceBottomBarHeight => view.padding.bottom;
+  double get viewDeviceBottomBarHeight => view.padding.bottom;
 
-  ViewPadding get physicalDeviceViewInsets => view.viewInsets;
+  ViewPadding get viewDeviceViewInsets => view.viewInsets;
 
-  ViewPadding get physicalDeviceViewPadding => view.viewPadding;
+  ViewPadding get viewDeviceViewPadding => view.viewPadding;
 
-  double get physicalDeviceTextScaleFactor =>
+  double get viewDeviceTextScaleFactor =>
       view.platformDispatcher.textScaleFactor;
 
   bool get isPlatformDarkMode =>
